@@ -15,7 +15,7 @@ export async function GET(req, { params }) {
 
     // Connect to the database and fetch user data
     const  db  = await createConnection();
-    const userData = await db.collection("user").findOne({ _id: new ObjectId(userId) });
+    const userData = await db.collection("user").findOne({ userId });
 
     // Return appropriate response
     if (!userData) {

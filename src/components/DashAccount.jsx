@@ -77,11 +77,14 @@ const DashAccount = () => {
     const handleSessionOrToken = async () => {
       // Handle token logic
       const token = localStorage.getItem("token");
+      const emailNew = localStorage.getItem('email')
 
       if (token) {
         try {
-        //   const email = DecodeTokenEmail(token); // Replace with your decoding logic
-          const fetchedUserDetails = await FetchUserById(userId); // Replace with your API call
+
+          //   const email = DecodeTokenEmail(token); // Replace with your decoding logic
+          const allUser = await FetchUserById(userId); // Replace with your API call
+          const fetchedUserDetails = allUser.filter((data) => data.email == emailNew);
           fetchTransactionHistory(fetchedUserDetails[0].subscription)
           const email = fetchedUserDetails[0].email;
           setUserDetails(fetchedUserDetails[0]); // Store the fetched details in state
@@ -187,7 +190,6 @@ const DashAccount = () => {
     if (file) {
       // Handle the file (e.g., upload it or display a preview)
       setImage(file); // Set the selected file to state
-      console.log('Selected file:', file);
       handleUpload(file); // Automatically trigger upload
 
     }
@@ -197,37 +199,33 @@ const DashAccount = () => {
   const handleEditProfile = async (e) => {
     e.preventDefault()
     try {
-        const userId = localStorage.getItem('userId');
-        console.log('Attempting to update profile for userId:', userId);
-        console.log('Update payload:', {
-            userId, name,   email,
-            
-        });
+      const userId = localStorage.getItem('userId');
 
-        const response = await fetch('/api/users/editprofile', {
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                userId: userId,
-                firstname: userDetails?.firstname,
-                lastname:userDetails?.lastname,
-                email: userDetails?.email
-            })
-        });
+      const response = await fetch('/api/users/editprofile', {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          userId: userId,
+          firstname: userDetails?.firstname,
+          lastname: userDetails?.lastname,
+          email: userDetails?.email
+        })
+      });
 
-        console.log('Response status:', response.status);
+      console.log('Response status:', response.status);
 
-        if (!response.ok) {
-            console.error('Response not OK:', response.status, response.statusText);
-            throw new Error('Failed to update profile');
-        }
+      if (!response.ok) {
+        console.error('Response not OK:', response.status, response.statusText);
+        throw new Error('Failed to update profile');
+      }
 
-        const result = await response.json();
-        console.log('Update result:', result);
+      const result = await response.json();
 
       if (result.success) {
+        localStorage.setItem("name", userDetails?.firstname + " " + userDetails?.lastname)
+        localStorage.setItem("email", userDetails?.email)
         setSuccess(true);
         toast({
           title: 'Success',
@@ -246,7 +244,7 @@ const DashAccount = () => {
         variant: 'error',
       });
     }
-};
+  };
 
 
 
@@ -391,29 +389,29 @@ const DashAccount = () => {
         body: JSON.stringify({ subscriptionId, email }),
       });
 
-            if (!response.ok) {
-                toast({
-                    title: 'Error',
-                    description: 'Something Went Wrong, Please Try Again.',
-                    variant: 'error',
-                });
-                throw new Error('Error canceling subscription');
-            }
-            else {
-                const data = await response.json();
-                toast({
-                    title: 'Success',
-                    description: 'Subscription canceled successfully!',
-                    variant: 'success',
-                });
-                setUpdateData(!updateData)
-                // handleRemoveSubs(email, subscriptionId);
-            }
-            // Optionally show a success message to the user
-        } catch (err) {
-            console.log("Error in update:", err.message);
-        }
-    };
+      if (!response.ok) {
+        toast({
+          title: 'Error',
+          description: 'Something Went Wrong, Please Try Again.',
+          variant: 'error',
+        });
+        throw new Error('Error canceling subscription');
+      }
+      else {
+        const data = await response.json();
+        toast({
+          title: 'Success',
+          description: 'Subscription canceled successfully!',
+          variant: 'success',
+        });
+        setUpdateData(!updateData)
+        // handleRemoveSubs(email, subscriptionId);
+      }
+      // Optionally show a success message to the user
+    } catch (err) {
+      console.log("Error in update:", err.message);
+    }
+  };
 
 
   const handleChangeCard = async () => {
@@ -451,16 +449,12 @@ const DashAccount = () => {
         const filteredData = Array.isArray(mySubs)
           ? data.data.filter(item => mySubs.includes(item.subscription))
           : [];
-
-
-                console.log("all subs : ", mySubs)
-                console.log("filter dat : ", filteredData)
-                setMySubscriptions(filteredData); // Set the fetched data to state
-            }
-        } catch (error) {
-            console.log("Error fetching transaction history:", error);
-        }
-    };
+        setMySubscriptions(filteredData); // Set the fetched data to state
+      }
+    } catch (error) {
+      console.log("Error fetching transaction history:", error);
+    }
+  };
 
 
 

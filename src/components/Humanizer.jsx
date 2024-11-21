@@ -60,8 +60,8 @@ const Humanizer = ({ fetchData }) => {
     setIsSecondContainerVisible(false);
   };
 
-  const wordCount = text.trim().split(/\s+/).filter(Boolean).length;
-  const charCount = text.length;
+  let wordCount = text.trim().split(/\s+/).filter(Boolean).length;
+  let charCount = text.length;
 
   const togglePlanhumanize = () => {
     setIsActive(!isActive);
@@ -73,7 +73,7 @@ const Humanizer = ({ fetchData }) => {
     if (plan_id === "-2" || plan_id === "-1") {
       return;
     }
-    if (text.length < 30) {
+    if (wordCount < 30) {
       toast({
         title: "Error",
         description: "Input words should be more than 30 words.",
@@ -81,9 +81,10 @@ const Humanizer = ({ fetchData }) => {
       });
       return;
     }
-
-    setIsSecondContainerVisible(true);
-    await fetchRewriteData();
+    else{
+      setIsSecondContainerVisible(true);
+      await fetchRewriteData();
+    }
   };
 
   const fetchHisrotyData = async () => {
@@ -110,7 +111,7 @@ const Humanizer = ({ fetchData }) => {
         localStorage.removeItem("keyword");
       }
     } catch (err) {
-      console.error("Error fetching history:", err);
+      console.log("Error fetching history:", err);
       localStorage.removeItem("keyword");
     }
   };
@@ -143,6 +144,9 @@ const Humanizer = ({ fetchData }) => {
         title: "Success",
         description: "Text successfully humanized.",
         variant: 'success',
+        style: {
+          backgroundColor: "black",
+        }
       });
     } catch (err) {
       setError(err.message);
@@ -195,16 +199,11 @@ const Humanizer = ({ fetchData }) => {
         setSavedContentId(result.data?.insertedId);
         setPlan_id(result?.data?.plan_id);
         localStorage.setItem("plan_id", result?.data?.plan_id);
-        toast({
-          title: "Success",
-          description: "Humanized content saved successfully.",
-          variant: 'success',
-        });
       } else {
-        console.error("Failed to save data");
+        console.log("Failed to save data");
       }
     } catch (error) {
-      console.error("Error saving data:", error);
+      console.log("Error saving data:", error);
       toast({
         title: "Error",
         description: "Error saving data. Please try again.",
@@ -218,7 +217,7 @@ const Humanizer = ({ fetchData }) => {
       const clipboardText = await navigator.clipboard.readText();
       setText(clipboardText);
     } catch (err) {
-      console.error("Failed to read clipboard contents:", err);
+      console.log("Failed to read clipboard contents:", err);
     }
   };
 
@@ -237,7 +236,7 @@ const Humanizer = ({ fetchData }) => {
           description: "Text copied to clipboard!",
         })
       )
-      .catch((err) => console.error("Failed to copy text: ", err));
+      .catch((err) => console.log("Failed to copy text: ", err));
       // saveCopied(true)
       
   };
@@ -267,7 +266,7 @@ const Humanizer = ({ fetchData }) => {
       const data = await res.json();
       console.log("Save successful:", data);
     } catch (error) {
-      console.error("Failed to save data:", error);
+      console.log("Failed to save data:", error);
     }
   };
   
@@ -307,7 +306,7 @@ const Humanizer = ({ fetchData }) => {
 //         console.log('Fetched API Key Data:', data);
 //         return data;
 //     } catch (error) {
-//         console.error('Failed to fetch API key:', error);
+//         console.log('Failed to fetch API key:', error);
 //         return null;
 //     }
 // }

@@ -104,6 +104,24 @@ const PaymentSuccess = () => {
     fetchSessionData();
   }, []);
 
+  const fetchPrompt = (id) => {
+      switch (id) {
+        case 1:
+          return 50;
+        case 2: 
+        return 100;
+
+        case 4: 
+          return 600;
+
+        case 5: 
+        return 1200;
+      
+        default:
+          return -1;
+      }
+  }
+
   // Create and save subscription data only once after sessionData is set
   useEffect(() => {
     if (sessionData && !hasSaved) {
@@ -142,7 +160,7 @@ const PaymentSuccess = () => {
 
           const saveResult = await saveResponse.json();
           if (saveResponse.ok) {
-            updateUser(id, sessionData?.subscription) 
+            updateUser(id, sessionData?.subscription, saveResult.prompt) 
             setHasSaved(true); // Set flag to prevent duplicate saves
           } else {
             console.log("Failed to save subscription front:", saveResult.error);
