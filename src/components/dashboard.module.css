@@ -1,0 +1,1561 @@
+.turnitDashOverview p {
+    color: #FFF;
+    font-family: "Inter";
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.turnitDashOverview button {
+    font-family: "Inter";
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: -0.15px;
+    border-radius: 8px;
+    border: 1px solid #18181A;
+    background-color: #27272A;
+    padding: 8px 15px;
+}
+
+.turnitDashOverview {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.sDOverviewContentLeftScroll {
+    border-radius: 16px;
+    border: 1px solid #18181A;
+    background-color: #27272A;
+    padding: 18px;
+    margin-top: 24px;
+}
+.showHumanizedData{
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      font-size: 16px;
+      line-height: 1.6; 
+      font-family: "Inter";
+}
+.humanizedArea{
+    min-height: 500px;
+    /* display: flex; */
+    /* justify-content: center; */
+    padding-top: 50px;
+}
+
+.sDOContentLeftTxt h5 {
+    color: #FFF;
+    font-family: "Inter";
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    line-height: 120%;
+}
+
+.sDOContentLeftTxt p {
+    color: #FFF;
+    font-family: "Inter";
+    font-size: 14px;
+    font-weight: 400;
+}
+
+.sDOContentLeftTxtList ul li h6 {
+    color: #FFF;
+    font-family: "Inter";
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 6px;
+    line-height: 120%;
+    /* 21.6px */
+}
+
+.sDOContentLeftTxtList ul li p {
+    color: #FFF;
+    font-family: "Inter";
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 130%;
+    /* 18.2px */
+    margin-bottom: 0;
+}
+
+.sDOContentLeftTxtList ul li {
+    padding-bottom: 12px;
+}
+
+.sDOContentLeftTxtList ul li:last-child {
+    padding-bottom: 0px;
+}
+
+.sDOContentLeftTxtList ul {
+    padding-top: 18px;
+}
+
+
+
+
+.turnitGenPastepadiback{
+background: #6F4EE3 !important;
+color: white !important;
+    border-radius: 12px !important;
+    padding: 7px 16px !important;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+
+.turnitGenPaste {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.turnitGenPaste h2 {
+    color: #FFF;
+    font-family: "Inter";
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 120%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.turnitGencontainerbutton {
+    color: #FFF;
+    font-family: "Inter";
+    font-size: 14px;
+    font-weight: 700;
+    border-radius: 6px;
+    background: #171719;
+    padding: 8px 36.5px;
+    margin: 24px 0;
+}
+
+.turnitGencontainertextarea {
+    border-radius: 12px;
+    border: 1px solid #2D3033;
+    background: #171719;
+    width: 100%;
+    height: 273px;
+    padding: 24px;
+    padding-right: 24px;
+    outline: none;
+    box-sizing: border-box;
+}
+.turnitGencontainertextarea::-webkit-scrollbar {
+    width: 5px; 
+  }
+  
+  .turnitGencontainertextarea::-webkit-scrollbar-track {
+    background: #18181B;
+    border-radius: 0;
+    margin: 10px 0;
+  }
+  
+  .turnitGencontainertextarea::-webkit-scrollbar-thumb {
+    background-color: #f5f5f5; 
+    border-radius: 10px; 
+  }
+  
+  .turnitGencontainertextarea::-webkit-scrollbar-thumb:hover {
+    background-color: #e0e0e0; 
+  }
+
+.turnitGencontainertextarea::placeholder {
+    color: var(--Neutral-03, #EFEFEF);
+
+    /* Base 2 */
+    font-family: "Inter";
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: -0.14px;
+}
+
+.turnitGenCounter {
+    color: #FFF;
+    font-family: "Inter";
+    font-size: 16px;
+    font-weight: 400;
+}
+
+.turnitgenerateButton {
+    color: #FCFCFC;
+    font-family: "Inter";
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 24px;
+    letter-spacing: -0.15px;
+    display: flex;
+    align-items: center;
+    gap: 8PX;
+    border-radius: 12px;
+    background: #6F4EE3;
+    padding: 12px 20px;
+}
+
+.turnitGenCounter {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 17px;
+}
+
+.turnitGenPaste button {
+    border-radius: 7.553px;
+    border: 1px solid #242629;
+    background: hsl(240, 4%, 9%);
+    padding: 7px 12px;
+    color: #6F767E;
+    font-family: "Inter";
+    font-size: 15px;
+    /* font-style: normal; */
+    font-weight: 500;
+    /* line-height: 24px; */
+    letter-spacing: -0.15px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+
+.turnitgenrestab h4 {
+    color: #FFF;
+    font-family: "Inter";
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 160%;
+    /* 25.6px */
+}
+
+.turnitgenrestab p {
+    color: #FFF;
+    font-family: "Inter";
+    font-size: 7.636px;
+    font-weight: 600;
+    line-height: 13.091px;
+    letter-spacing: -0.076px;
+    border-radius: 4.12px;
+    border: 0.545px solid #242629;
+    background-color: #171719;
+    padding: 5px 6.5px;
+}
+
+.turnitgenrestab {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    justify-content: end;
+    padding-top: 55px;
+}
+
+
+.tgenrestRimg h4 {
+    color: #FFF;
+    font-family: "Inter";
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.tgenrestRimg {
+    display: flex;
+    gap: 24px;
+}
+
+.tgenrestResultxt .tgenrestResultxtparagraph {
+    color: #FFF;
+    font-family: "Inter";
+    font-size: 16px;
+    font-weight: 300;
+    line-height: 160%;
+    padding: 16px 24px 16px 48px;
+
+}
+
+.tgenrestResulcopyrefresh {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0 48px;
+}
+
+.turnitgenaiques input {
+    border-radius: 12px;
+    border: 1px solid #2D3033;
+    background: #171719;
+    padding: 19px 16px;
+    outline: none;
+    width: 100%;
+    padding-left: 49px;
+}
+
+.turnitgenaiques input::placeholder {
+    color: #EFEFEF;
+    font-family: "Inter";
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: -0.14px;
+}
+
+.turnitgenaiques {
+    position: relative;
+    margin-top: 55px;
+}
+
+.turnitGeninputbtn {
+    border-radius: 12px;
+    background: #6F4EE3;
+    padding: 11.5px 20px;
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translatey(-50%);
+}
+
+.turnitgenaimagic {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translatey(-50%);
+
+}
+
+.turnitGencontainer {
+    padding: 32px;
+}
+
+
+/* ===== api key ======== */
+
+.turnitApiDetectorheading p {
+    color: #FAFAFA;
+    font-family: "Inter";
+    font-size: 15.875px;
+    font-weight: 600;
+    letter-spacing: -0.4px;
+}
+.plansBtn{
+    padding: 4px 14px;
+    background: #6F4EE3;
+    border-radius: 20px;
+}
+
+.turnitApiDetectorheading {
+    display: flex;
+    align-items: center;
+    grid-area: 2px;
+    justify-content: space-between;
+    gap:10px;
+    padding-bottom: 24px;
+}
+.turnitApiDetectorheading .turnitApiDetectorheadingpade{
+    padding: 0;
+}
+
+.turnitGenPastepadiapikey{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+
+.turnitApiDetectorBg {
+    border-radius: 12px;
+    border: 1px solid #27272A;
+    background: #09090B;
+    box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.10), 0px 1px 2px -1px rgba(0, 0, 0, 0.10);
+    padding: 25px 25px 19px 25px;
+}
+
+.turnitApiDetectorContent h4 {
+    color: #FAFAFA;
+    font-family: "Inter";
+    font-size: 24px;
+    font-weight: 600;
+    letter-spacing: -0.4px;
+    margin: 0;
+    line-height: 1;
+}
+
+.turnitApiDetectorContent p {
+    color: #A1A1AA;
+    font-family: "Inter";
+    font-size: 14px;
+    font-weight: 400;
+    margin: 0;
+    padding-top: 6px;
+}
+
+.turnitApiDetectorContent p:last-child {
+    padding-top: 12px;
+}
+
+.tApiDetectorKey h5 {
+    color: #FAFAFA;
+    font-family: "Inter";
+    font-size: 14px;
+    font-weight: 500;
+    padding-bottom: 12px;
+}
+
+.tApiDetectorKey input {
+    border-radius: 6px;
+    border: 1px solid #27272A;
+    background: rgba(255, 255, 255, 0.00);
+    box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.05);
+    padding: 5px 13px;
+    width: 100%;
+    outline: none;
+}
+
+.tApiDetectorKey input::placeholder {
+    color: #A1A1AA;
+    font-family: "Inter";
+    font-size: 13.672px;
+    font-weight: 400;
+}
+
+.turnitApiDetectorKey {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+    row-gap: 20px;
+    padding-top: 24px;
+    align-items: center;
+}
+
+.tApiDetectorKey {
+    flex: 0 0 32%;
+}
+
+.turnitApiDetectorBgbtn button {
+    color: #FFF;
+    text-align: center;
+    font-family: "Inter";
+    font-size: 13.781px;
+    font-weight: 500;
+    border-radius: 6px;
+    background: #6F4EE3;
+    box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.10), 0px 1px 2px -1px rgba(0, 0, 0, 0.10);
+    padding: 8px 16px;
+}
+
+.turnitApiDetectorBgbtn {
+    display: flex;
+    justify-content: center;
+    margin-top: 24px;
+}
+
+.turnitApiDetectorheadingbg {
+    padding: 32px;
+}
+
+
+
+/* ===== pricing ====== */
+
+
+/* PlanStatus.module.css */
+.planStatusContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-bottom: 32px;
+}
+
+.limitedText {
+    color: #FFF;
+    text-align: center;
+    font-family: "Inter";
+    font-size: 15px;
+    font-weight: 400;
+    margin-right: 9px;
+}
+
+.planToggle {
+    display: inline-block;
+    width: 48px;
+    height: 24px;
+    position: relative;
+    margin-right: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    border-radius: 32px;
+    background: #6F4EE3;
+}
+
+.planToggle.active {
+    background-color: #3b3deb;
+}
+
+.circle {
+    width: 20px;
+    height: 20px;
+    background-color: #fff;
+    /* Blue */
+    border-radius: 50%;
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    transition: all 0.3s ease;
+}
+
+.circle.active {
+    left: 24px;
+    /* Moves the circle to the right when active */
+}
+
+.planText {
+    color: #FFF;
+    text-align: center;
+    font-family: "Inter";
+    font-size: 15px;
+    font-weight: 400;
+}
+
+.planText span {
+    color: #22C55E;
+    font-family: "Inter";
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.textAreaContainerBorderhight textarea {
+    height: 357px;
+}
+
+
+.turnitAccountBg {
+    border-radius: 16px;
+    background: #120B28;
+    box-shadow: 0px 5px 20px -1px rgba(0, 0, 0, 0.10);
+    padding: 32px;
+    min-height: 605px;
+    margin-top: 24px;
+    z-index: 1;
+    position: relative;
+
+}
+
+.turnitAccountUserProfile .turnitAccountUserProfileavt {
+    width: 96px;
+    height: 96px;
+    object-fit: contain;
+    border-radius: 50%;
+}
+
+.turnitAccountUserProfile {
+    position: relative;
+}
+
+.taupEdit {
+    position: absolute;
+    bottom: 8px;
+    right: 0;
+}
+
+.turnitAccountUser {
+    display: flex;
+    gap: 35px;
+    align-items: center;
+    padding-bottom: 43px;
+}
+
+.tapUserName h4 {
+    color: #FFF;
+    font-family: "Space Grotesk";
+    font-size: 36px;
+    font-weight: 500;
+    margin: 0;
+}
+
+.stacHeading {
+    color: #FFF;
+    text-align: center;
+    font-family: "Inter";
+    font-size: 24px;
+    font-weight: 700;
+    padding-bottom: 12px;
+}
+
+
+
+.tadcProfileImgset{
+    position: relative;
+    width: max-content;
+}
+.tadcProfileImgset p{
+    padding: 0px;
+}
+.tadcProfileImgsetwidth{
+    width: 96px;
+    height: 96px;
+    border-radius: 100%;
+    object-fit: cover;
+}
+.tadcProfileImgset button{
+position: absolute;
+/* top: 0; */
+right: 0;
+bottom: 10px;
+}
+.profileInitials{
+    background-color: #8e44ad;
+    color: white;
+    font-size: 20px;
+    font-weight: 600;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: "Inter";
+}
+.profileInitial{
+background: green;
+}
+
+.tadcProfileImg{
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.tApiDetectorKeyeditbtn{
+    position: relative;
+}
+
+.tApiDetectorKeyeditbtn button{
+    position: absolute;
+    top: 50%;
+    right: 15px;
+    transform: translateY(-50%);
+}
+
+
+/* ===========================pricingPlanSection========================================== */
+
+
+
+
+.pricingPlanHeading {
+    margin: auto;
+    max-width: 978px;
+    display: flex;
+    gap: 20px;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.pricingPlanHeading h1 {
+    font-family: "Space Grotesk";
+    font-size: 47.81px;
+    font-weight: 700;
+    line-height: 60px;
+    color: #11121C;
+    text-align: center;
+
+}
+
+.pricingPlanHeading h1 span {
+    display: block;
+}
+
+.priceHeadingPara {
+    font-family: "Space Grotesk";
+    font-size: 16px;
+    font-weight: 300;
+    line-height: 24px;
+    text-align: center;
+    color: #11121C;
+
+}
+
+.priceHeadingPara span {
+    color: #6A4DFF;
+}
+
+.planCard {
+    border: 1px solid #C3D1E3;
+    max-width: 416px;
+    border-radius: 16px;
+    padding: 18px 24px 18px 24px;
+    transition: transform 0.2s ease;
+    position: relative;
+    /* Smooth transition */
+}
+
+.planCard .planCardPopular {
+    border-radius: 8px 0px 0px 8px;
+    background: #6A4DFF;
+    color: #FFF;
+    text-align: center;
+    font-family: "Inter";
+    font-size: 16px;
+    font-weight: 500;
+    padding: 6px 15px;
+    position: absolute;
+    top: 32px;
+    right: 0;
+}
+
+
+.planCard:hover {
+    transform: scale(1.02);
+    /* Slightly zooms in */
+}
+
+
+.planTag {
+    color: #6F4EE3;
+    font-family: "Inter";
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 40px;
+}
+
+.planPrice {
+    color: #FFF;
+    font-family: "Inter";
+    font-size: 48px;
+    font-weight: 700;
+    line-height: 120%;
+    padding: 8px 0;
+
+}
+.planPrice span{
+    color: #FFF;
+    font-family: "Inter";
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 140%;
+}
+
+.planPara {
+    color: #FFF;
+    font-family: "Inter";
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 140%;
+
+}
+
+.planType {
+    font-family: "Space Grotesk";
+    font-size: 24px;
+    font-weight: 500;
+    line-height: 30px;
+    text-align: center;
+    color: #11121C;
+    margin: 16px auto;
+}
+
+.planType {
+    display: inline-block;
+    padding: 7px;
+    text-decoration: none;
+    transition: 0.2s;
+    border: 1px solid #6F4EE3;
+    border-radius: 27px;
+    width: 100%;
+    border-radius: 27px;
+    background-color: #6F4EE3;
+    color: #FFF;
+    font-family: "Inter";
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.planType:hover {
+    background-color: white;
+    color: #6F4EE3;
+    border: 1px solid #6A4DFF;
+
+}
+
+.planFeature li {
+    color: #FFF;
+    font-family: "Inter";
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: 27px;
+    margin-bottom: 4px;
+
+}
+
+.planFeature li:last-child {
+    margin-bottom: 0;
+}
+
+
+.planFeature {
+    list-style: disc;
+    /* Default bullet style */
+    margin-left: 20px;
+    /* Ensure there is space for bullets */
+    padding: 0;
+}
+
+.planToggleBtn {
+    border: 1px solid #BDBFD4;
+    padding: 10px;
+}
+
+.planCardParent {
+    display: flex;
+    gap: 24px;
+}
+
+.planSelectBtn {
+    display: flex;
+    justify-content: center;
+    margin-top: 48px;
+    margin-bottom: 54px;
+
+}
+
+.planSelectBtn span {
+    padding: 8px 10px;
+    border: 1px solid #BDBFD4;
+    border-radius: 8px;
+}
+
+
+.textAreaContainer {
+    border-radius: 16px;
+    background: #141414;
+    box-shadow: 0px 5px 20px -1px rgba(0, 0, 0, 0.10);
+    padding: 32px;
+}
+
+.starttextAreaContainer {
+    border-radius: 16px;
+    border: 1px solid #27272A;
+    background: #09090B;
+    backdrop-filter: blur(200px);
+    padding: 32px;
+}
+
+.turnitDashOvervCont {
+    padding: 32px;
+}
+
+/* ====== Account ======= */
+
+
+.turnitApiDetectorBgAccount {
+    border-radius: 12px;
+    border: 1px solid #27272A;
+    background: #09090B;
+    box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.10), 0px 1px 2px -1px rgba(0, 0, 0, 0.10);
+    padding: 25px;
+}
+
+.tApiDetectorKey p {
+    color: #A1A1AA;
+    font-family: "Inter";
+    font-size: 14px;
+    font-weight: 400;
+    border-radius: 6px;
+    border: 1px solid #27272A;
+    background: rgba(255, 255, 255, 0.00);
+    box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.05);
+    padding: 8.5px 13px;
+}
+
+.turnitApiDetectorBgAccountwidth {
+    max-width: 531px;
+    margin-top: 24px;
+
+}
+
+.turnitApiDetectorContentbtn button {
+    color: #FFF;
+    text-align: center;
+    font-family: "Inter";
+    font-size: 14px;
+    font-weight: 400;
+    border-radius: 6px;
+    background-color: #6F4EE3;
+    padding: 4px 12px;
+}
+
+.turnitApiDetectorContentbtn {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.turnitApiDetectorKeywidth .tApiDetectorKey {
+    flex: unset;
+    width: 100%;
+    max-width: 320px;
+}
+
+/* ===== dashboard change log ======== */
+
+
+
+.sDOContentLeftTxtVersion h6 {
+    color: #FFF;
+    font-family: "Inter";
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 120%;
+    padding-bottom: 9px;
+}
+
+.sDOContentLeftTxtChange {
+    padding-bottom: 18px;
+}
+
+.sDOContentLeftTxtVersion ul li {
+    color: #FFF;
+    font-family: "Inter";
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 130%;
+    list-style: disc;
+    margin-left: 16px;
+    padding-bottom: 6px;
+}
+
+.sDOContentLeftTxtVersion ul {
+    border-bottom: 1px solid #E4E4E7;
+    padding-bottom: 6px;
+    margin-bottom: 12px;
+}
+
+.sDOverviewContentchange {
+    height: 500px;
+    overflow-y: scroll;
+    padding-right: 12px;
+}
+
+/* Custom scrollbar styles */
+.sDOverviewContentchange::-webkit-scrollbar {
+    width: 5px;
+    /* Width of the scrollbar */
+}
+
+.sDOverviewContentchange::-webkit-scrollbar-track {
+    background: #18181B;
+    /* Track color */
+}
+
+.sDOverviewContentchange::-webkit-scrollbar-thumb {
+    background-color: #f5f5f5;
+    /* Scrollbar color */
+    border-radius: 10px;
+    /* Roundness of the scrollbar */
+}
+
+.sDOverviewContentchange::-webkit-scrollbar-thumb:hover {
+    background-color: #e0e0e0;
+    /* Color on hover */
+}
+
+.turnitDashOverviewBg {
+    padding: 32px;
+}
+
+
+/* ======= humanizer ========== */
+
+.turnitGenPastepadi {
+    padding-bottom: 24px;
+}
+
+.planTogglechat {
+    display: inline-block;
+    width: 48px;
+    height: 24px;
+    position: relative;
+    margin-right: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    border-radius: 32px;
+    background: #171719;
+}
+
+.circlechat {
+    width: 20px;
+    height: 20px;
+    border-radius: 24px;
+    background: var(--Neutral-06, #272B30);
+    box-shadow: 0px 1px 2px 0px rgba(255, 255, 255, 0.10) inset,
+        0px -1px 1px 0px rgba(0, 0, 0, 0.10) inset,
+        0px 2px 4px 0px rgba(0, 0, 0, 0.20);
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    transition: all 0.3s ease;
+}
+
+.planTogglechat.active {
+    background: #6F4EE3;
+}
+
+.circlechat.active {
+    left: 24px;
+    /* Moves the circle to the right when active */
+    background: white;
+}
+
+
+
+/* ======= DP Modal ======== */
+
+
+.turnitDpEdit h2 {
+    color: #333;
+    font-family: "Space Grotesk";
+    font-size: 24px;
+    font-weight: 500;
+}
+
+.turnitDpEdit p {
+    color: #666;
+    font-family: "Space Grotesk";
+    font-size: 14px;
+    font-weight: 400;
+    margin: 0;
+}
+
+.turnitDpEditImg img {
+    width: 192px;
+    height: 192px;
+    object-fit: cover;
+}
+
+.turnitDpEditImg {
+    display: flex;
+    justify-content: center;
+}
+
+.turnitDpEditUpload,
+.turnitDpEditRemove {
+    border-radius: 27px;
+    background-color: #3B3DEB;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #F8F8F8;
+    font-family: "Space Grotesk";
+    font-size: 14px;
+    font-weight: 700;
+    padding: 9.5px 0px;
+    width: 100%;
+    gap: 12px;
+    border: 1px solid #3B3DEB;
+    transition: 0.2s;
+}
+
+.turnitDpEditButtons form {
+    width: 100%;
+}
+
+.turnitDpEditUpload:hover,
+.turnitDpEditRemove:hover {
+    color: #3B3DEB;
+    background-color: white;
+}
+
+.turnitDpEditUpload svg path,
+.turnitDpEditRemove svg path {
+    transition: 0.2s;
+}
+
+.turnitDpEditUpload:hover svg path,
+.turnitDpEditRemove:hover svg path {
+    fill: #3B3DEB;
+}
+
+
+.turnitDpEditButtons {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+}
+
+.turnitDpEditImg {
+    padding-top: 48px;
+    padding-bottom: 32px;
+}
+
+.turnitDpEdit {
+    max-width: 350px;
+}
+
+.turnitDpEditClose {
+    position: absolute;
+    top: 24px;
+    right: 24px;
+}
+
+.tadcProfileImgEditProfile{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+
+
+/* ====== History HUmanizer ========== */
+
+
+.turnitHumanizerHistoryRedirectTxt h4{
+color: #EFEFEF;
+font-family: "Inter";
+font-size: 14px;
+font-weight: 400;
+text-transform: capitalize;
+}
+
+.turnitHumanizerHistoryRedirectTxt p{
+color: #84888C;
+font-family: "Inter";
+font-size: 14px;
+font-weight: 400;
+}
+
+.turnitHumanizerHistoryRedirectTxt{
+    border-bottom: 1px solid #393939;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 12px;
+    margin-bottom: 12px;
+}
+
+.turnitHumanizerHistoryRedirectPara p{
+color:#EFEFEF;
+font-family: "Inter";
+font-size: 12px;
+font-weight: 300;
+line-height: 24px; 
+letter-spacing: -0.12px;
+}
+
+.turnitHumanizerHistoryRedirect{
+border-radius: 12px;
+border: 1px solid #2D3033;
+background: #171719;
+padding: 24px 12px;
+margin-bottom: 24px;
+cursor: pointer;
+}
+
+.turnitHumanizerHistoryRedirectPara {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 4; /* Number of lines to show */
+    overflow: hidden;
+}
+.turnitHumanizerHistoryRedirectloder{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 25px;
+}
+.turnitHumanizerHistoryRedirectloder .turnitHumanizerHistoryRedirect{
+width: 100%;
+max-width: 370px;
+}
+
+
+.turnitHumanizerHistorySearch {
+    margin: 10px 0;
+    /* text-align: center; */
+}
+
+.searchInput {
+    /* width: 30%; */
+    padding: 8px;
+    border: 1px solid #2D3033;
+    border-radius: 4px;
+    outline: none;
+}
+
+.turnitHumanizerHistoryRedirectTime{
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.turnitApiDetectorheadingsrch{
+display: flex;
+align-items: center;
+justify-content: space-between;
+padding-bottom: 14px;
+}
+
+.turnitApiDetectorheadingsrch .turnitApiDetectorheading{
+   padding: 0;
+    }
+    .turnitHumanizerHistorySearch input{
+    border-radius: 12px;
+        
+    }
+
+
+    /* Pagination container */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 20px;
+}
+
+/* Pagination button styles */
+.paginationButton {
+  background-color: #6F4EE3; /* Blue color */
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 8px 16px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.paginationButton:hover {
+  background-color: #6F4EE388; /* Darker blue on hover */
+  transform: translateY(-2px); /* Subtle lift effect */
+}
+
+.paginationButton:disabled {
+  background-color: #d6d6d6; /* Gray for disabled button */
+  color: #888; /* Lighter text */
+  cursor: not-allowed; /* Indicate unclickable state */
+}
+
+/* Pagination info text */
+.paginationInfo {
+  font-size: 1rem;
+  color: #fff; /* Dark gray */
+  font-weight: bold;
+}
+
+.turnitHumanizerHistoryloader{
+   display: flex;
+   justify-content: center;
+   align-items: center;
+}
+
+
+
+.tApiDetectorKey h4{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-top: 20px;
+    color: #FAFAFA;
+    font-family: "Inter";
+    font-size: 24px;
+    font-weight: 600;
+    letter-spacing: -0.4px;
+    margin: 0;
+    line-height: 1;
+    transition: 0.2s;
+    }
+    
+    .tApiDetectorKey h4:hover{
+        color: #6F4EE3;
+    }
+    
+    .tApiDetectorKey h4 svg path{
+        transition: 0.2s;
+    }
+    
+    .tApiDetectorKey h4:hover svg path{
+        fill: #6F4EE3;
+    }
+    
+    .tapicancelsubscription{
+        background: #6F4EE3 ;
+        color: white ;
+        font-family: "Inter";
+        font-size: 14px;
+        font-weight: 500;
+        border-radius: 12px ;
+        padding: 7px 16px ;
+        display: flex;
+        align-items: center;
+        width: max-content;
+        margin-top: 20px;
+        transition: 0.2s;
+    }
+    .tapicancelsubscription:hover{
+        background: white ;
+        color: #6F4EE3 ;
+        }
+
+/* ======= media query ========== */
+
+
+@media(max-width:1280px) {
+    .planPrice{
+        font-size: 44px;
+    }
+    .planPara{
+        font-size: 14px;
+    }
+    .planType{
+        font-size: 14px;
+    }
+    .planCard{
+        min-width: 280px;
+        padding: 18px 20px;
+    }
+    .starttextAreaContainer{
+        padding: 15px;
+    }
+    .textAreaContainer{
+        padding: 15px;
+    }
+    .planCardParent{
+        gap: 20px;
+    }
+    .turnitDashOvervCont{
+        padding: 20px;
+    }
+    .turnitGencontainer{
+        padding: 16px;
+    }
+    .starttextAreaContainer{
+        padding: 20px;
+    }
+    .starttextAreaContainer{
+        padding: 20px;
+    }
+}
+
+@media (max-width: 1024px) {
+    .turnitDashOverviewBg{
+        padding: 16px;
+    }
+    
+    .turnitGenPaste h2{
+        font-size: 18px;
+
+    }
+    .turnitGenPaste img{
+        width: 18px
+    }
+    .sDOverviewContentLeftScroll{
+        margin-top: 20px;
+    }
+    .sDOContentLeftTxt h5{
+        font-size: 22px;
+    }
+    .turnitApiDetectorContent{
+        font-size: 22px;
+    }
+    .turnitApiDetectorBg{
+        padding: 22px 22px 16px 22px;
+    }
+    .turnitApiDetectorheading{
+        padding-bottom: 20px;
+    }
+    .planCardParent{
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    .turnitApiDetectorheading{
+        padding-bottom: 10px;
+    }
+    .turnitApiDetectorKey{
+       margin-top: 8px;
+    }
+
+    .turnitApiDetectorheadingbg{
+        padding: 10px;
+    }
+    .turnitApiDetectorBgAccount{
+        padding: 15px 15px 16px 15px;
+        margin-top: 12px;
+    }
+
+    .turnitApiDetectorKey{
+        padding-top: 10px;
+    }
+   
+}
+
+
+@media(max-width:768px) {
+    .turnitGencontainerbutton{
+        margin: 18px 0;
+    }
+    .turnitGenPaste svg{
+        width: 20px;
+    }
+    .turnitGencontainertextarea{
+        height: 200px;
+        padding: 16px;
+    }
+    .turnitGenCounter{
+        margin-top: 8px;
+        font-size: 14px;
+    }
+    .turnitgenerateButton{
+        padding: 8px 14px;
+        gap: 6px;
+    }
+    .turnitgenerateButton svg{
+        width:18px;
+    }
+    .tApiDetectorKey h5{
+        white-space: nowrap;
+    }
+    .turnitApiDetectorKey{
+        gap: 20px;
+        row-gap: 14px;
+        padding-top: 18px;
+    }
+    .turnitApiDetectorheadingbg{
+        padding: 5px;
+        padding-top: 20px;
+    }
+    .turnitApiDetectorBg{
+        padding: 15px 15px 16px 15px;
+    }
+    .turnitgenrestab{
+        padding-top: 30px;
+    }
+    .tApiDetectorKey p{
+        white-space: nowrap;
+    }
+    .tApiDetectorKey h5{
+        padding-bottom: 5px;
+    }
+    .turnitApiDetectorContent h4{
+        font-size: 20px;
+    }
+    .turnitApiDetectorContent p:last-child{
+        padding-top: 5px;
+    }
+    .turnitGenPaste {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    .turnitApiDetectorheading{
+        padding-bottom: 10px;
+        flex-wrap: wrap;
+    }
+    .turnitApiDetectorheadingsrch{
+        padding-bottom: 0;
+        padding-top: 10px;
+        flex-wrap: wrap;
+    }
+}
+
+
+@media(max-width:480px) {
+    .turnitDashOverviewBg{
+        padding: 5px;
+    }
+
+    .turnitGenContainer{
+        padding: 0px;
+    }
+    .turnitGenCounter{
+        flex-wrap: wrap;
+    }
+
+    .turnitGencontainer{
+        padding: 0px;
+    }
+
+    .tgenrestRimg{
+        gap:12px;
+    }
+    .tgenrestResultxt .tgenrestResultxtparagraph{
+        padding: 10px 14px 16px 35px;
+    }
+    .turnitgenrestab{
+        padding-top: 16px;
+    }
+
+    .turnitgenaiques{
+        margin-top: 20px;
+    }
+
+    .turnitDashOverview{
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    .sDOverviewContentLeftScroll{
+        margin-top: 10px;
+    }
+    .sDOContentLeftTxth5{
+        font-size: 20px;
+    }
+    .sDOContentLeftTxt p{
+        font-size: 13px
+    }
+    .planTogglechat{
+        margin-right: 0px;
+    }
+    .planStatusContainer{
+        flex-wrap: wrap;
+    }
+    .turnitDashOvervCont{
+        padding: 0px;
+    }
+    .starttextAreaContainer{
+        padding: 15px;
+        margin-top: 20px;
+    }
+    .turnitGenPastepadi {
+        padding-top: 20px;
+    }
+    .turnitGenPaste{
+        padding-top: 20px;
+    }
+    .tApiDetectorKey {
+        flex: 0 0 100%;
+    }
+   
+}
+.cancelSubscription{
+    padding: 10px;
+    max-width: max-content;
+    margin-left: auto;
+    cursor: pointer;
+}
+.cancelBtnParent{
+    display: flex;
+    align-items: end;
+    width: 100%;
+}
+
+.tapicancelsubscription, .actionBtn{
+    background: #6F4EE3 ;
+    color: white ;
+    font-family: "Inter";
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: 12px ;
+    padding: 7px 16px ;
+    display: flex;
+    align-items: center;
+    width: max-content;
+    margin-top: 20px;
+    transition: 0.2s;
+    cursor: pointer;
+}
+.tapicancelsubscription:hover , .actionBtn:hover{
+    background: white ;
+    color: #6F4EE3 ;
+}
+.actionBtn{
+    margin-top: unset;
+}

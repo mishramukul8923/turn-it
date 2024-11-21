@@ -1,0 +1,96 @@
+.paymentHistory{
+    padding: 32px;
+}
+.historyTable {
+    width: 100%;
+    margin: 30px 0px;
+}
+.historyTableshad{
+    margin: 30px 0px;
+    
+}
+.historyTable thead{
+    background-color: #474747;
+}
+.historyTable .firstHead{
+    border-top-left-radius: 10px !important;
+    border-bottom-left-radius: 10px !important;
+}
+.historyTable .lastHead{
+    border-top-right-radius: 10px !important;
+    border-bottom-right-radius: 10px !important;
+}
+.historyTable thead tr th, .historyTable tbody tr td {
+    font-size: 14px;
+    font-weight: 600;
+    padding: 10px 5px;
+    text-align: center;
+    color: white;
+}
+.historyTable tbody tr td{
+    cursor: pointer;
+    font-weight: 500;
+}
+.paymentHistory h1{
+    font-size: 30px;
+    margin: 20px 0;
+}
+.entyInfo{
+    font-size: 15px;
+    margin: unset;
+    float: right;
+}
+.planType{
+    text-transform: capitalize;
+}
+
+.turnitGenPaste {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.turnitGenPaste h2 {
+    color: #FFF;
+    font-family: "Inter";
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 120%;
+    margin-left: 5px;
+}
+.turnitGenPaste > div{
+    display: flex;
+    gap: 3px;
+    align-items: center;
+}
+.activePlan{
+    font-size: 16px;
+}
+.activePlan span{
+    font-weight: 600;
+}
+.turnitGenPastepadiback {
+    background: #6f4ee3!important;
+    color: #fff!important;
+    border-radius: 12px!important;
+    padding: 7px 16px!important;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-bottom: 20px;
+}
+
+
+.emptyPurchaseHistory{
+    margin-top: 50px;
+    float: left;
+}
+
+@media(max-width: 768px){
+    .turnitGenPaste {
+        flex-direction: column;
+        align-items: start;
+    }
+    .paymentHistory {
+        padding: 12px;
+    }
+}

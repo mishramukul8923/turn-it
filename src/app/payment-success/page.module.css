@@ -1,0 +1,34 @@
+.paymentPageMsg{
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.payemntDiv{
+    display: flex;
+    text-align: center;
+    flex-direction: column;
+    gap: 15px;
+}
+.payemntDiv svg, .turnitLogo img{
+    margin: auto;
+}
+.payemntDiv h1{
+    margin-bottom: unset;
+    font-size: 30px;
+}
+.payemntDiv p{
+    margin-bottom: unset;
+    font-size: 20px;
+}
+.turnitLogo img{
+   margin: auto;
+   height: 60px;
+}
+.paymentInfo h2{
+    font-size: 20px;
+}
+.paymentHead{
+    margin-top: 20px;
+}
