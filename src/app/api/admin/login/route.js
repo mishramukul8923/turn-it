@@ -68,11 +68,3 @@ export const handleLogin = async (data) => {
         return NextResponse.json({ error: error.message }, { status: 500 });
     } 
 };
-
-
-
-
-
-
-
-

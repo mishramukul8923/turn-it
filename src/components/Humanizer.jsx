@@ -141,7 +141,7 @@ const Humanizer = ({ fetchData }) => {
         toast({
           title: 'Error',
           description: 'Something Went Wrong, Please Try Again.',
-          variant: 'error',
+           variant: "destructive",
         });
       }
 
@@ -150,7 +150,8 @@ const Humanizer = ({ fetchData }) => {
       setHumanizedData(result.content[0].text);
       toast({
         title: "Success",
-        description: "Text successfully humanized.",
+        // description: "Text successfully humanized.",
+        description: "successfully humanized Content Generated.",
         variant: 'success',
         style: {
           backgroundColor: "black",
@@ -431,29 +432,7 @@ const Humanizer = ({ fetchData }) => {
                         </div>
                     </div>
                     <div className='turnitHumanizerPercentleft'>
-                        <div className='thplscanbg'>
-                            {/* 1 */}
-                            <button className='thplscan'>
-                                <div className='thplscanimgfirst'>
-                                    <div className='thplscanimg'>
-                                        <Image src="/images/gptzero.svg" alt="Open Menu" fluid />
-                                        <p>GPTZero</p>
-                                    </div>
-                                    <div className='thplscanimgsearch'>
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="11" viewBox="0 0 12 11" fill="none">
-                                            <path d="M5.56821 8.33856C7.4693 8.33856 9.01044 6.79742 9.01044 4.89633C9.01044 2.99524 7.4693 1.4541 5.56821 1.4541C3.66712 1.4541 2.12598 2.99524 2.12598 4.89633C2.12598 6.79742 3.66712 8.33856 5.56821 8.33856Z" stroke="white" strokeWidth="0.860558" strokeLinecap="round" strokeLinejoin="round" />
-                                            <path d="M9.87071 9.19883L8.02051 7.34863" stroke="white" strokeWidth="0.860558" strokeLinecap="round" strokeLinejoin="round" />
-                                        </svg>
-                                        Scan
-                                    </div>
-                                </div>
-                                <div className='thplscanclk'>
-                                    <p>Click to scan</p>
-                                </div>
-                            </button>
-                            {/* 2 */}
-
-
+                        {/* <div className='thplscanbg'>
                             <button className='thplscan'>
                                 <div className='thplscanimgfirst'>
                                     <div className='thplscanimg'>
@@ -474,7 +453,6 @@ const Humanizer = ({ fetchData }) => {
                             </button>
 
 
-                            {/* 3 */}
                             <button className='thplscan'>
                                 <div className='thplscanimgfirst'>
                                     <div className='thplscanimg'>
@@ -493,7 +471,8 @@ const Humanizer = ({ fetchData }) => {
                                     <p>Click to scan</p>
                                 </div>
                             </button>
-                            {/* 4 */}
+
+
                             <button className='thplscan'>
                                 <div className='thplscanimgfirst'>
                                     <div className='thplscanimg'>
@@ -512,14 +491,32 @@ const Humanizer = ({ fetchData }) => {
                                     <p>Click to scan</p>
                                 </div>
                             </button>
-                        </div>
+                            <button className='thplscan'>
+                                <div className='thplscanimgfirst'>
+                                    <div className='thplscanimg'>
+                                        <Image src="/images/gptzero.svg" alt="Open Menu" fluid />
+                                        <p>GPTZero</p>
+                                    </div>
+                                    <div className='thplscanimgsearch'>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="11" viewBox="0 0 12 11" fill="none">
+                                            <path d="M5.56821 8.33856C7.4693 8.33856 9.01044 6.79742 9.01044 4.89633C9.01044 2.99524 7.4693 1.4541 5.56821 1.4541C3.66712 1.4541 2.12598 2.99524 2.12598 4.89633C2.12598 6.79742 3.66712 8.33856 5.56821 8.33856Z" stroke="white" strokeWidth="0.860558" strokeLinecap="round" strokeLinejoin="round" />
+                                            <path d="M9.87071 9.19883L8.02051 7.34863" stroke="white" strokeWidth="0.860558" strokeLinecap="round" strokeLinejoin="round" />
+                                        </svg>
+                                        Scan
+                                    </div>
+                                </div>
+                                <div className='thplscanclk'>
+                                    <p>Click to scan</p>
+                                </div>
+                            </button>
+                        </div> */}
                         <div className='turnithumanizehighlight'>
                             <div className='turnithumanizehighlightshow'>
                                 <div className='thzhlsflex'>
-                                    <div className={styles.planTogglechat} onClick={togglePlanhumanize}>
+                                    {/* <div className={styles.planTogglechat} onClick={togglePlanhumanize}>
                                         <div className={`${styles.circlechat} ${isActive ? styles.active : ''}`}></div>
-                                    </div>
-                                    <p>Show Highlights</p>
+                                    </div> */}
+                                    <p>Content Generated</p>
                                 </div>
                                 <div className={styles.turnitGenPaste}>
                                     <div className="tooltip-container">

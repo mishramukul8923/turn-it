@@ -157,7 +157,7 @@ const DashAccount = () => {
       toast({
         title: 'Error',
         description: 'Please select an image to upload.',
-        variant: 'error',
+         variant: "destructive",
       });
       return;
     }
@@ -192,7 +192,7 @@ const DashAccount = () => {
       toast({
         title: 'Error',
         description: 'Error uploading image. Please try again.',
-        variant: 'error',
+         variant: "destructive",
       });
     }
   };
@@ -255,7 +255,7 @@ const DashAccount = () => {
       toast({
         title: 'Error',
         description: error.message,
-        variant: 'error',
+         variant: "destructive",
       });
     }
   };
@@ -270,7 +270,7 @@ const DashAccount = () => {
       toast({
         title: 'Error',
         description: 'User is not authenticated.',
-        variant: 'error',
+         variant: "destructive",
       });
       return;
     }
@@ -304,7 +304,7 @@ const DashAccount = () => {
       toast({
         title: 'Error',
         description: 'Error removing image. Please try again.',
-        variant: 'error',
+         variant: "destructive",
       });
     }
   };
@@ -509,7 +509,7 @@ const handleChangePassword = async (event) => {
         toast({
           title: 'Error',
           description: 'Something Went Wrong, Please Try Again.',
-          variant: 'error',
+           variant: "destructive",
         });
         throw new Error('Error canceling subscription');
       }

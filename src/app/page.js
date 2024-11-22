@@ -16,7 +16,7 @@ export default function Home() {
   useEffect(() => {
     if(localStorage.getItem('userId')){
       setTimeout(() => {
-        router.push('/dashboard')
+        router.push('/dashboard/humanizer')
       }, 1000);
     }
     else{
