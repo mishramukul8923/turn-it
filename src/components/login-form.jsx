@@ -11,6 +11,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
+
+
+
 export function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -119,6 +122,10 @@ export function LoginForm() {
   }, [session]);
 
   return (
+
+    <>
+ 
+
     <Card className="mx-auto max-w-sm">
       <CardHeader>
         <CardTitle className="text-2xl">Login</CardTitle>
@@ -165,5 +172,6 @@ export function LoginForm() {
         </div>
       </CardContent>
     </Card>
+    </>
   );
 }

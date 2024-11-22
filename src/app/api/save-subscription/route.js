@@ -12,6 +12,9 @@ export async function POST(req) {
 
   const collection = db.collection('subscription'); // "subscription" collection in MongoDB
 
+  // Ensure email is defined before using it in getNearDate
+  let email;
+
   const calculatePlanExpired = (latestPlan, data) => {
     const latestPlanExpired = latestPlan?.plan_expired ? new Date(latestPlan.plan_expired) : null;
     const createdAt = data?.created_at ? new Date(data.created_at) : null;
@@ -27,11 +30,57 @@ export async function POST(req) {
     return existingPlanExpired ? existingPlanExpired.toISOString() : null;
   };
 
+  async function getNearDate(date1) {
+    try {
+      const today = new Date();
+  
+      // Ensure email is available here (you should pass it to the function or make it globally accessible)
+      if (!email) {
+        throw new Error("Email is not provided.");
+      }
+  
+      // Fetch plans with expired_at in the future
+      const planTable = await collection
+        .find({ email, expired_at: { $gt: today } })
+        .sort({ started_at: -1 })
+        .toArray();
+  
+      // Get the first plan matching the criteria
+      const firstPlan = planTable.length > 0 ? planTable[0] : null;
+  
+      // Handle the case where no valid plans are found
+      if (!firstPlan || !firstPlan.expiry) {
+        return date1;
+      }
+  
+      const date2 = firstPlan.expiry;
+  
+      // Ensure date1 is valid
+      if (!date1 || isNaN(new Date(date1).getTime())) {
+        throw new Error("Invalid date1 provided.");
+      }
+  
+      // Ensure date2 is valid
+      if (!date2 || isNaN(new Date(date2).getTime())) {
+        return date1;
+      }
+  
+      // Compare and return the earlier date
+      return new Date(date1) < new Date(date2) ? date1 : date2;
+    } catch (error) {
+      return date1; // Return null or handle as needed in the calling context
+    }
+  }
 
 
   try {
     const data = await req.json();
-    const email = data?.email || null;
+    email = data?.email || null; // Assign email here
+
+    // Validate email before proceeding
+    if (!email) {
+      return NextResponse.json({ error: 'Email is required' }, { status: 400 });
+    }
 
     // Fetch plans and get the latest one
     const planTable = await collection
@@ -64,7 +113,8 @@ export async function POST(req) {
         ? latestPlan?.plan_expired
         : data?.created_at,
       customerId: data?.customer,
-      subscription: data?.subscription
+      subscription: data?.subscription,
+      prompt: data.prompt
     };
 
     // Validate required fields
@@ -79,10 +129,11 @@ export async function POST(req) {
     return NextResponse.json({
       message: 'Subscription saved successfully!',
       id: result.insertedId,
+      expiry: await getNearDate(subscriptionData?.plan_expired)
     });
   } catch (error) {
     console.log('Error saving subscription:', error);
-    return NextResponse.json({ error: 'Failed to save subscription back' }, { status: 500 });
+    return NextResponse.json({ error: 'Failed to save subscription', details: error.message }, { status: 500 });
   }
 }
 

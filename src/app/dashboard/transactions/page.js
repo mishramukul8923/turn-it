@@ -17,15 +17,40 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar"
 import TransactionHistory from "./TransactionHistory";
+import Head from "next/head";
 
 export default function Page() {
   return (
     <>
+    <Head>
+  <title>Content transaction - Smooth AI to Human Content Conversion</title>
+  <meta name="description" content="Experience seamless transactions from AI-generated content to human-like text. TurnItHuman ensures smooth and accurate content transformation." />
+  <meta name="keywords" content="content transaction, AI to human content, humanized text, TurnItHuman transformation, AI content conversion, seamless transaction" />
+  <meta name="author" content="TurnItHuman" />
+
+  {/* Open Graph Meta Tags */}
+  <meta property="og:title" content="Content transaction - Smooth AI to Human Content Conversion" />
+  <meta property="og:description" content="Transform AI-generated content into human-like text effortlessly. Experience accurate and natural transactions with TurnItHuman." />
+  <meta property="og:url" content="https://turnit.vercel.app/transaction" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="/images/transaction-page-preview.jpg" />
+
+  {/* Twitter Meta Tags */}
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Content transaction - Smooth AI to Human Content Conversion" />
+  <meta name="twitter:description" content="Transform AI-generated content into human-like text effortlessly. Experience accurate and natural transactions with TurnItHuman." />
+  <meta name="twitter:image" content="/images/transaction-page-preview.jpg" />
+
+  {/* Additional Tags for SEO */}
+  <link rel="canonical" href="https://turnit.vercel.app/transaction" />
+  <meta name="robots" content="index, follow" />
+</Head>
+
      <ThemeProvider
             attribute="class"
             defaultTheme="system"
             enableSystem
-            disableTransitionOnChange
+            disabletransactionOnChange
           >
     <SidebarProvider>
       <AppSidebar />

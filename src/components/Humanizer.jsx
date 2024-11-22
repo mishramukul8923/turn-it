@@ -73,10 +73,18 @@ const Humanizer = ({ fetchData }) => {
     if (plan_id === "-2" || plan_id === "-1") {
       return;
     }
-    if (wordCount < 30) {
+    if (wordCount < 30 ) {
       toast({
         title: "Error",
         description: "Input words should be more than 30 words.",
+        variant: "destructive",
+      });
+      return;
+    }
+    else if (wordCount > 700 ) {
+      toast({
+        title: "Error",
+        description: "Input words should be less than 700 words.",
         variant: "destructive",
       });
       return;
@@ -343,6 +351,16 @@ const Humanizer = ({ fetchData }) => {
 
 
     return (
+      <>
+     
+
+
+
+
+
+
+
+
         <div className={styles.turnitGencontainer}>
             {/* First Container */}
             <div className={styles.turnitGencontainerFirst}>
@@ -585,6 +603,8 @@ const Humanizer = ({ fetchData }) => {
             )}
             <ToastContainer position="top-right" autoClose={3000} hideProgressBar />
         </div>
+
+        </>
     );
 };
 

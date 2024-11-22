@@ -24,7 +24,42 @@ export const GET = async (req) => {
         }
 
         // Use the find method to get users
-        const user = await db.collection('user').find(query).toArray(); // Fetch users based on the query
+        const user = await db.collection('user').findOne(query); // Fetch a single user based on the query
+
+        // Check if the user's expired_at has passed
+        if (user && user.expired_at && new Date(user.expired_at) < new Date()) {
+            const firstPlanId = user.plan_queue[0]; // Get the first plan_id from plan_queue
+
+            if (firstPlanId) {
+                // Find the subscription entry with the first plan_id
+                const subscriptions = await db.collection('subscription').find({
+                    plan_id: firstPlanId,
+                    userId: user._id // Assuming userId is the field in subscription collection
+                }).toArray();
+
+                // If multiple subscriptions are found, find the one with the nearest started_at date
+                let selectedSubscription = null;
+                if (subscriptions.length > 0) {
+                    selectedSubscription = subscriptions.reduce((prev, curr) => {
+                        return new Date(curr.started_at) > new Date(prev.started_at) ? prev : curr;
+                    });
+                }
+
+                // If a subscription entry is found, update the user
+                if (selectedSubscription) {
+                    user.plan_id = firstPlanId; // Update plan_id
+                    user.expired_at = selectedSubscription.expired_at; // Update expired_at
+                    user.prompt = selectedSubscription.prompt; // Update prompt
+                    user.plan_queue.shift(); // Remove the first entry from plan_queue
+
+                    // Update the user in the database
+                    await db.collection('user').updateOne(
+                        { _id: user._id },
+                        { $set: { plan_id: user.plan_id, expired_at: user.expired_at, prompt: user.prompt, plan_queue: user.plan_queue } }
+                    );
+                }
+            }
+        }
 
         return NextResponse.json(user); // Return the result as JSON
     } catch (error) {
@@ -173,7 +208,7 @@ export const PUT = async (req) => {
             );
         }
 
-        const { email, subscription, ...updateFields } = body;
+        const { email, subscription, plan_id, expired_at, prompt, ...updateFields } = body;
 
         // Step 4: Validate email-based updates
         if (!email) {
@@ -197,7 +232,32 @@ export const PUT = async (req) => {
                 updateFields.subscription = subscription; // If no existing subscriptions, just set the new ones
             }
             console.log("updateFields : ", updateFields);
+        }
 
+        // Check if user exists
+        const currentUser = await db.collection("user").findOne({ email });
+        if (!currentUser) {
+            console.error(`User not found with email: ${email}`);
+            return NextResponse.json(
+                { error: "User not found with the provided email." },
+                { status: 404 }
+            );
+        }
+
+        // Check if expired_at is not expired
+        const currentDate = new Date();
+        if (currentUser.expired_at && new Date(currentUser.expired_at) > currentDate) {
+            // Add plan_id to plan_queue
+            if (!currentUser.plan_queue) {
+                currentUser.plan_queue = []; // Initialize if it doesn't exist
+            }
+            currentUser.plan_queue.push(plan_id); // Add the new plan_id
+            updateFields.plan_queue = currentUser.plan_queue; // Update the plan_queue
+        } else {
+            // Update plan_id, expired_at, and prompt
+            updateFields.plan_id = plan_id; // Update plan_id
+            updateFields.expired_at = expired_at; // Update expired_at
+            updateFields.prompt = prompt; // Update prompt
         }
 
         // Ensure there are fields to update

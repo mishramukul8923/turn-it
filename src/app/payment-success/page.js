@@ -5,6 +5,9 @@ import { useEffect, useState } from 'react';
 import styles from "./page.module.css"
 import { Image } from 'react-bootstrap';
 import { useRouter } from 'next/navigation';
+import Head from 'next/head';
+
+
 
 const PaymentSuccess = () => {
   const [sessionData, setSessionData] = useState(null);
@@ -17,21 +20,38 @@ const PaymentSuccess = () => {
 
   useEffect(() => {
     // if (typeof window != 'undefined') { // Check if running in the browser
-      const tempId = localStorage.getItem("userId")
-      const tempemail = localStorage.getItem("email");
-      setUserId(tempId);
-      setEmail(tempemail)
+    const tempId = localStorage.getItem("userId")
+    const tempemail = localStorage.getItem("email");
+    setUserId(tempId);
+    setEmail(tempemail)
     // }
-}, []);
+  }, []);
+
+  const fetchPrompt = (id) => {
+    switch (id) {
+      case "1":
+        return 50;
+      case "2":
+        return 100;
+      case "4":
+        return 600;
+      case "5":
+        return 1200;
+      default:
+        return -99;
+    }
+  }
 
 
 
-  const updateUser = async (newPlan, subscription_id) => {
-   
+  const updateUser = async (newPlan, subscription_id, expiry) => {
+
     const body = {
       email: email,
       plan_id: newPlan,
-      subscription: [subscription_id]
+      subscription: [subscription_id],
+      prompt: fetchPrompt(newPlan),
+      expired_at: expiry
     };
 
     console.log("Request body:", body);
@@ -104,23 +124,6 @@ const PaymentSuccess = () => {
     fetchSessionData();
   }, []);
 
-  const fetchPrompt = (id) => {
-      switch (id) {
-        case 1:
-          return 50;
-        case 2: 
-        return 100;
-
-        case 4: 
-          return 600;
-
-        case 5: 
-        return 1200;
-      
-        default:
-          return -1;
-      }
-  }
 
   // Create and save subscription data only once after sessionData is set
   useEffect(() => {
@@ -147,7 +150,8 @@ const PaymentSuccess = () => {
         created_at: new Date(),
         plan_id: id,
         customerId: sessionData?.customer,
-        subscription: sessionData?.subscription
+        subscription: sessionData?.subscription,
+        prompt: fetchPrompt(id),
       };
 
       const saveSubscriptionData = async () => {
@@ -160,7 +164,7 @@ const PaymentSuccess = () => {
 
           const saveResult = await saveResponse.json();
           if (saveResponse.ok) {
-            updateUser(id, sessionData?.subscription, saveResult.prompt) 
+            updateUser(id, sessionData?.subscription, saveResult.expiry)
             setHasSaved(true); // Set flag to prevent duplicate saves
           } else {
             console.log("Failed to save subscription front:", saveResult.error);
@@ -198,6 +202,30 @@ const PaymentSuccess = () => {
 
   return (
     <>
+
+<Head>
+  <title>Payment Successful | TurnIt</title>
+  <meta name="description" content="Your payment has been successfully processed. Thank you for subscribing to TurnIt!" />
+  <meta name="keywords" content="TurnIt, payment successful, subscription, payment confirmation" />
+  <meta name="author" content="TurnIt Team" />
+  
+  {/* <!-- Open Graph Meta Tags for Social Media Sharing --> */}
+  <meta property="og:title" content="Payment Successful | TurnIt" />
+  <meta property="og:description" content="Your payment has been successfully processed. Thank you for subscribing to TurnIt!" />
+  <meta property="og:url" content="https://turnit.vercel.app/payment-success" />
+  <meta property="og:image" content="https://turnit.vercel.app/images/payment-success-image.png" />
+  <meta property="og:type" content="website" />
+  
+  {/* <!-- Twitter Card Meta Tags --> */}
+  <meta name="twitter:title" content="Payment Successful | TurnIt" />
+  <meta name="twitter:description" content="Your payment has been successfully processed. Thank you for subscribing to TurnIt!" />
+  <meta name="twitter:image" content="https://turnit.vercel.app/images/payment-success-image.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  
+  {/* <!-- Favicon --> */}
+  <link rel="icon" href="https://turnit.vercel.app/favicon.ico" />
+</Head>
+
 
       <div className={styles.paymentPageMsg}>
         {loading ? (
