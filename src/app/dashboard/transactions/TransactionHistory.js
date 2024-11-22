@@ -89,22 +89,22 @@ const TransactionHistory = () => {
 
   const fetchPlanType = (price) => {
     switch (price) {
-      case "19":
+      case "1":
         return `Basic Monthly`;
 
-      case "49":
+      case "2":
         return `Standard Monthly`;
 
-      case "99":
+      case "3":
         return `Enterprise Monthly`;
 
-      case "180":
+      case "4":
         return `Basic Yearly`;
 
-      case "468":
+      case "5":
         return `Standard Yearly`;
 
-      case "1068":
+      case "6":
         return `Premium Yearly`;
 
       default:
@@ -171,7 +171,7 @@ const TransactionHistory = () => {
                   <TableCell className="font-medium">{idx + 1}</TableCell>
                   <TableCell>{data?.paymentId}</TableCell>
                   <TableCell className={styles.planType}>
-                    {fetchPlanType(data?.price)}
+                    {fetchPlanType(data?.plan_id)}
                   </TableCell>
                   <TableCell>{formatData(data?.created_at)}</TableCell>
                   <TableCell>{formatData(data?.started_at)}</TableCell>

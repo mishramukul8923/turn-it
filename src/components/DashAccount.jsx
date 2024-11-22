@@ -83,11 +83,11 @@ const DashAccount = () => {
         try {
 
           //   const email = DecodeTokenEmail(token); // Replace with your decoding logic
-          const allUser = await FetchUserById(userId); // Replace with your API call
-          const fetchedUserDetails = allUser.filter((data) => data.email == emailNew);
-          fetchTransactionHistory(fetchedUserDetails[0].subscription)
-          const email = fetchedUserDetails[0].email;
-          setUserDetails(fetchedUserDetails[0]); // Store the fetched details in state
+          const fetchedUserDetails = await FetchUserDetails(localStorage.getItem("email")); // Replace with your API call
+          // const fetchedUserDetails = allUser.filter((data) => data.email == emailNew);
+          fetchTransactionHistory(fetchedUserDetails.subscription)
+          const email = fetchedUserDetails.email;
+          setUserDetails(fetchedUserDetails); // Store the fetched details in state
 
         } catch (error) {
           console.error("Failed to handle token logic:", error);
