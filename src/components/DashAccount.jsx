@@ -83,11 +83,11 @@ const DashAccount = () => {
         try {
 
           //   const email = DecodeTokenEmail(token); // Replace with your decoding logic
-          const allUser = await FetchUserById(userId); // Replace with your API call
-          const fetchedUserDetails = allUser.filter((data) => data.email == emailNew);
-          fetchTransactionHistory(fetchedUserDetails[0].subscription)
-          const email = fetchedUserDetails[0].email;
-          setUserDetails(fetchedUserDetails[0]); // Store the fetched details in state
+          const fetchedUserDetails = await FetchUserDetails(localStorage.getItem("email")); // Replace with your API call
+          // const fetchedUserDetails = allUser.filter((data) => data.email == emailNew);
+          fetchTransactionHistory(fetchedUserDetails.subscription)
+          const email = fetchedUserDetails.email;
+          setUserDetails(fetchedUserDetails); // Store the fetched details in state
 
         } catch (error) {
           console.error("Failed to handle token logic:", error);
@@ -143,7 +143,7 @@ const DashAccount = () => {
       toast({
         title: 'Error',
         description: 'Please select an image to upload.',
-        variant: 'error',
+         variant: "destructive",
       });
       return;
     }
@@ -178,7 +178,7 @@ const DashAccount = () => {
       toast({
         title: 'Error',
         description: 'Error uploading image. Please try again.',
-        variant: 'error',
+         variant: "destructive",
       });
     }
   };
@@ -241,7 +241,7 @@ const DashAccount = () => {
       toast({
         title: 'Error',
         description: error.message,
-        variant: 'error',
+         variant: "destructive",
       });
     }
   };
@@ -256,7 +256,7 @@ const DashAccount = () => {
       toast({
         title: 'Error',
         description: 'User is not authenticated.',
-        variant: 'error',
+         variant: "destructive",
       });
       return;
     }
@@ -290,7 +290,7 @@ const DashAccount = () => {
       toast({
         title: 'Error',
         description: 'Error removing image. Please try again.',
-        variant: 'error',
+         variant: "destructive",
       });
     }
   };
@@ -393,7 +393,7 @@ const DashAccount = () => {
         toast({
           title: 'Error',
           description: 'Something Went Wrong, Please Try Again.',
-          variant: 'error',
+           variant: "destructive",
         });
         throw new Error('Error canceling subscription');
       }

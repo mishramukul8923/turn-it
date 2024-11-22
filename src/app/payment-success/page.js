@@ -17,21 +17,38 @@ const PaymentSuccess = () => {
 
   useEffect(() => {
     // if (typeof window != 'undefined') { // Check if running in the browser
-      const tempId = localStorage.getItem("userId")
-      const tempemail = localStorage.getItem("email");
-      setUserId(tempId);
-      setEmail(tempemail)
+    const tempId = localStorage.getItem("userId")
+    const tempemail = localStorage.getItem("email");
+    setUserId(tempId);
+    setEmail(tempemail)
     // }
-}, []);
+  }, []);
+
+  const fetchPrompt = (id) => {
+    switch (id) {
+      case "1":
+        return 50;
+      case "2":
+        return 100;
+      case "4":
+        return 600;
+      case "5":
+        return 1200;
+      default:
+        return -99;
+    }
+  }
 
 
 
-  const updateUser = async (newPlan, subscription_id) => {
-   
+  const updateUser = async (newPlan, subscription_id, expiry) => {
+
     const body = {
       email: email,
       plan_id: newPlan,
-      subscription: [subscription_id]
+      subscription: [subscription_id],
+      prompt: fetchPrompt(newPlan),
+      expired_at: expiry
     };
 
     console.log("Request body:", body);
@@ -104,23 +121,6 @@ const PaymentSuccess = () => {
     fetchSessionData();
   }, []);
 
-  const fetchPrompt = (id) => {
-      switch (id) {
-        case 1:
-          return 50;
-        case 2: 
-        return 100;
-
-        case 4: 
-          return 600;
-
-        case 5: 
-        return 1200;
-      
-        default:
-          return -1;
-      }
-  }
 
   // Create and save subscription data only once after sessionData is set
   useEffect(() => {
@@ -147,7 +147,8 @@ const PaymentSuccess = () => {
         created_at: new Date(),
         plan_id: id,
         customerId: sessionData?.customer,
-        subscription: sessionData?.subscription
+        subscription: sessionData?.subscription,
+        prompt: fetchPrompt(id),
       };
 
       const saveSubscriptionData = async () => {
@@ -160,7 +161,7 @@ const PaymentSuccess = () => {
 
           const saveResult = await saveResponse.json();
           if (saveResponse.ok) {
-            updateUser(id, sessionData?.subscription, saveResult.prompt) 
+            updateUser(id, sessionData?.subscription, saveResult.expiry)
             setHasSaved(true); // Set flag to prevent duplicate saves
           } else {
             console.log("Failed to save subscription front:", saveResult.error);
@@ -221,7 +222,7 @@ const PaymentSuccess = () => {
             </div>
             <svg width="86" height="86" viewBox="0 0 86 86" fill="none" xmlns="http://www.w3.org/2000/svg">
               <rect width="86" height="86" rx="41.9512" fill="#0AB27D" />
-              <path d="M59.7797 30.4152L36.7066 53.4883L26.2188 43.0005" stroke="white" stroke-width="5.2439" stroke-linecap="round" stroke-linejoin="round" />
+              <path d="M59.7797 30.4152L36.7066 53.4883L26.2188 43.0005" stroke="white" strokeWidth="5.2439" stroke-linecap="round" stroke-linejoin="round" />
             </svg>
             <h1 className={styles.paymentHead}>Payment Success</h1>
             {sessionData && (

@@ -65,7 +65,7 @@ export function LoginForm() {
       });
 
       setTimeout(() => {
-        router.push("/dashboard");
+        router.push("/dashboard/humanizer");
       }, 1000);
 
       if (result.token) {
