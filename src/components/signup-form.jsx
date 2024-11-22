@@ -136,6 +136,9 @@ export function SignUpForm() {
   };
 
   return (
+    <>
+  
+
     <Card className="mx-auto max-w-sm">
       <CardHeader>
         <CardTitle className="text-2xl">Sign Up</CardTitle>
@@ -208,5 +211,6 @@ export function SignUpForm() {
         </div>
       </CardContent>
     </Card>
+    </>
   );
 }

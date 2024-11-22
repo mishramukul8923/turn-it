@@ -191,6 +191,9 @@ const PricingPr = () => {
 
 
     return (
+        <>
+    
+
         <div className={styles.turnitDashOvervBg}>
 
             <div className={styles.turnitDashOvervCont}>
@@ -390,6 +393,7 @@ const PricingPr = () => {
                 </div>
             </div>
         </div>
+        </>
     );
 };
 

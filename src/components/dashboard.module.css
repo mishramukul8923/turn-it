@@ -428,6 +428,11 @@ color: white !important;
 .tApiDetectorKey {
     flex: 0 0 32%;
 }
+.subCancle{
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
 
 .turnitApiDetectorBgbtn button {
     color: #FFF;
@@ -1551,7 +1556,7 @@ padding-bottom: 14px;
     display: flex;
     align-items: center;
     width: max-content;
-    margin-top: 20px;
+    margin-top: 0px;
     transition: 0.2s;
     cursor: pointer;
 }

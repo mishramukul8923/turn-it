@@ -6,6 +6,8 @@ import DashAccount from "@/components/DashAccount";
 import { ThemeProvider } from "@/components/theme-provider";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
+import Head from "next/head";
+
 
 import {
   Breadcrumb,
@@ -29,6 +31,30 @@ export default function Page() {
 
   return (
     <>
+    <Head>
+  <title>User Profile - Manage Your Personal Information</title>
+  <meta name="description" content="View and edit your personal information, preferences, and settings on your User Profile page. Keep your details up to date with TurnItHuman." />
+  <meta name="keywords" content="user profile, manage profile, personal information, settings, user account, TurnItHuman user page" />
+  <meta name="author" content="TurnItHuman" />
+
+  {/* Open Graph Meta Tags */}
+  <meta property="og:title" content="User Profile - Manage Your Personal Information" />
+  <meta property="og:description" content="Manage your personal information and settings on your TurnItHuman user profile page. Stay updated with your preferences and account details." />
+  <meta property="og:url" content="https://turnit.vercel.app/user-profile" />
+  <meta property="og:type" content="profile" />
+  <meta property="og:image" content="/images/user-profile-preview.jpg" />
+
+  {/* Twitter Meta Tags */}
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="User Profile - Manage Your Personal Information" />
+  <meta name="twitter:description" content="Update your personal details and account settings on your TurnItHuman user profile page. Customize your preferences anytime." />
+  <meta name="twitter:image" content="/images/user-profile-preview.jpg" />
+
+  {/* Additional Tags for SEO */}
+  <link rel="canonical" href="https://turnit.vercel.app/user-profile" />
+  <meta name="robots" content="index, follow" />
+</Head>
+
       <ThemeProvider
         attribute="class"
         defaultTheme="system"

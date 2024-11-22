@@ -4,8 +4,13 @@ import styles from './dashboard.module.css';
 import { Image } from 'react-bootstrap';
 import { useSession } from 'next-auth/react';
 import FetchUserById from '@/utils/FetchUserById';
-
-
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -33,6 +38,7 @@ import {
 } from "@/components/ui/table"
 import Link from 'next/link';
 import { useToast } from "@/hooks/use-toast";
+import { ChangePassword } from './change-password';
 
 
 
@@ -40,7 +46,6 @@ import { useToast } from "@/hooks/use-toast";
 const DashAccount = () => {
   const my_plan = localStorage.getItem("plan_id");
   const [showAllSubscriptions, setShowAllSubscriptions] = useState(false);
-  const router = useRouter();
   const [userDetails, setUserDetails] = useState(null);
   const [image, setImage] = useState(null);
   const [token, setToken] = useState(null);
@@ -50,6 +55,15 @@ const DashAccount = () => {
   const [apikey, setapikey] = useState('')
   const [mySubscriptions, setMySubscriptions] = useState([])
   const [userId, setUserId] = useState(null)
+  const [showPassword, setShowPassword] = useState(false);
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmNewPassword, setConfirmNewPassword] = useState('');
+ 
+
+  const route = useRouter();
+
+
   const { toast } = useToast();
 
 
@@ -325,7 +339,109 @@ const DashAccount = () => {
 
 
 
+// ====================================================ChangePassword popup============================================
 
+ // Toggle password visibility
+ const togglePasswordVisibility = () => {
+  setShowPassword(!showPassword);
+};
+
+
+// Function to validate the password
+const validatePassword = (password) => {
+  // Regex for min 5 chars, 1 special char, 1 number
+  const passwordRegex = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{5,}$/;
+  return passwordRegex.test(password);
+};
+
+
+
+const handleChangePassword = async (event) => {
+  event.preventDefault();
+  const token = localStorage.getItem('token'); // Retrieve the token from local storage
+
+  // Validate input fields
+  if (!currentPassword || !newPassword || !confirmNewPassword) {
+    toast({
+      title: 'Error',
+      description: 'All fields are required!',
+      variant: 'error',
+    });
+    return;
+  }
+
+  
+  if (!validatePassword(newPassword)) {
+    toast({
+      title: 'Error',
+      description: 'Password must be at least 5 characters long, include 1 special character, and 1 number.',
+      variant: 'error',
+    });
+    return;
+  }
+
+
+  if (newPassword !== confirmNewPassword) {
+    toast({
+      title: 'Error',
+      description: 'New password and confirm password do not match!',
+      variant: 'error',
+    });
+    return;
+  }
+
+  const postData = {
+    currentPassword,
+    newPassword,
+    confirmNewPassword,
+  };
+
+  try {
+    const response = await fetch('/api/change-password', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+      body: JSON.stringify(postData),
+    });
+
+    let result;
+    try {
+      result = await response.json();
+    } catch (parseError) {
+      throw new Error('Server response was not in JSON format');
+    }
+
+    if (!response.ok) {
+      const errorMessage = result.error || 'Failed to change password';
+      throw new Error(errorMessage);
+    }
+
+    toast({
+      title: 'Success',
+      description: result.message || 'Password changed successfully!',
+      variant: 'success',
+    });
+
+    setSuccess(result.message);
+    setTimeout(() => {
+      route.push("/dashboard");
+    }, 1000);
+
+    // Clear form fields
+    setCurrentPassword('');
+    setNewPassword('');
+    setConfirmNewPassword('');
+  } catch (error) {
+    console.error('Error:', error.message);
+    toast({
+      title: 'Error',
+      description: error.message,
+      variant: 'error',
+    });
+  }
+};
 
 
 
@@ -560,6 +676,10 @@ const DashAccount = () => {
                   </DialogContent>
                 </Dialog>
               </div>
+
+
+
+
               <div>
                 <h4>Profile</h4>
                 <p>Your profile information</p>
@@ -567,6 +687,55 @@ const DashAccount = () => {
 
 
             </div>
+            <div className={styles.subCancle}>
+
+            {my_plan != "0" && <div className={styles.tapicancelsubscription}>
+          <Dialog>
+            <DialogTrigger asChild>
+              <button>
+                Cancel Subscription
+              </button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[850px]">
+              <DialogHeader>
+                <DialogTitle>    Cancel Subscription</DialogTitle>
+                <DialogDescription>
+                  Make changes to your Cancel Subscription here. Click save when you're done.
+                </DialogDescription>
+              </DialogHeader>
+              <Table className="my-subscriptions">
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="w-[70px]">S no.</TableHead>
+                    <TableHead className="w-[100px]">Invoice</TableHead>
+                    <TableHead>Start Date</TableHead>
+                    <TableHead>Expiry Date</TableHead>
+                    <TableHead >Amount</TableHead>
+                    <TableHead className="text-right">Action</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {
+                    mySubscriptions && mySubscriptions.length > 0 && mySubscriptions.map((data, idx) =>
+                      <TableRow key={idx}>
+                        <TableCell className="w-[50px]">{idx + 1}</TableCell>
+                        <TableCell className="font-medium">{data.paymentId}</TableCell>
+                        <TableCell>{formatData(data.started_at)}</TableCell>
+                        <TableCell>{formatData(data.plan_expired)}</TableCell>
+                        <TableCell>${data.price}</TableCell>
+                        <TableCell className="text-right"><div className={styles.actionBtn} onClick={() => { handleCancelSubscription(data.subscription) }}>Cancel Subscription</div>
+                        </TableCell>
+                      </TableRow>)
+                  }
+                </TableBody>
+              </Table>
+            </DialogContent>
+
+
+          </Dialog>
+        </div>}
+
+
             <Dialog>
               <DialogTrigger asChild>
                 {/* <Button variant="outline">Edit Profile</Button> */}
@@ -641,6 +810,8 @@ const DashAccount = () => {
 
               {/* =========edit form end======= */}
             </Dialog>
+            
+            </div>
           </div>
 
 
@@ -667,70 +838,93 @@ const DashAccount = () => {
                             </button> */}
             </div>
           </div>
-          {/* {my_plan != "0" && <><div className={`${styles.tApiDetectorKey} ${styles.cancelBtnParent}`}>
-                        <div className={`${styles.plansBtn} ${styles.cancelSubscription}`} onClick={() => { setShowAllSubscriptions(true); }}>
-                            Cancel Subscription
-                        </div>
-                    </div>
-                        <div className={`${styles.tApiDetectorKey} ${styles.cancelBtnParent}`}>
-                            <div className={`${styles.plansBtn} ${styles.cancelSubscription}`} onClick={() => { handleChangeCard() }}>
-                                Change Card
-                            </div>
-                        </div></>} */}
-          <div className={styles.tApiDetectorKey}>
-            <Link href="/change-password">
-              <h4><svg xmlns="http://www.w3.org/2000/svg" width="24" height="25" viewBox="0 0 24 25" fill="none"><path d="M20.1903 10.8225C19.6029 10.2352 18.822 9.91195 17.9915 9.91195H17.7665V6.8212C17.7665 3.66408 15.1982 1.0957 12.0412 1.0957H11.8295C8.67259 1.0957 6.10403 3.66408 6.10403 6.8212V9.91177H5.87903C5.04859 9.91177 4.26766 10.2352 3.68022 10.8225C3.09297 11.4099 2.76953 12.1908 2.76953 13.0215V20.7937C2.76953 21.6243 3.09297 22.4053 3.68022 22.9923C4.26747 23.5798 5.04841 23.9032 5.87903 23.9032H17.9915C18.8222 23.9032 19.6031 23.5798 20.1905 22.9923C20.7778 22.4051 21.1012 21.6241 21.1012 20.7937V13.0215C21.1012 12.191 20.7778 11.4101 20.1903 10.8225ZM7.60403 6.8212C7.60403 4.49133 9.49947 2.5957 11.8295 2.5957H12.0412C14.3711 2.5957 16.2665 4.49133 16.2665 6.8212V9.91177H7.60403V6.8212ZM19.6012 20.7937C19.6012 21.2173 19.4293 21.632 19.1298 21.9316C18.8257 22.2358 18.4215 22.4032 17.9915 22.4032H5.87903C5.44909 22.4032 5.04503 22.2358 4.74072 21.9315C4.43678 21.6277 4.26934 21.2236 4.26934 20.7937V13.0215C4.26934 12.5915 4.43678 12.1871 4.74072 11.8831C5.04484 11.5792 5.44891 11.4118 5.87884 11.4118H17.9913C18.4213 11.4118 18.8255 11.5792 19.1295 11.883C19.4336 12.1873 19.601 12.5915 19.601 13.0215L19.6012 20.7937Z" fill="#fff"></path><path d="M11.9355 14.8364C11.5214 14.8364 11.1855 15.1722 11.1855 15.5864V18.2287C11.1855 18.6429 11.5214 18.9787 11.9355 18.9787C12.3497 18.9787 12.6855 18.6429 12.6855 18.2287V15.5864C12.6855 15.1722 12.3497 14.8364 11.9355 14.8364Z" fill="#fff"></path></svg>
-                Change Password</h4>
-            </Link>
-
-          </div>
+         
+         
         </div>
 
-        {my_plan != "0" && <div className={styles.tapicancelsubscription}>
-          <Dialog>
-            <DialogTrigger asChild>
-              <button>
-                Cancel Subscription
-              </button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-[850px]">
-              <DialogHeader>
-                <DialogTitle>    Cancel Subscription</DialogTitle>
-                <DialogDescription>
-                  Make changes to your Cancel Subscription here. Click save when you're done.
-                </DialogDescription>
-              </DialogHeader>
-              <Table className="my-subscriptions">
-                <TableHeader>
-                  <TableRow>
-                    <TableHead className="w-[70px]">S no.</TableHead>
-                    <TableHead className="w-[100px]">Invoice</TableHead>
-                    <TableHead>Start Date</TableHead>
-                    <TableHead>Expiry Date</TableHead>
-                    <TableHead >Amount</TableHead>
-                    <TableHead className="text-right">Action</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {
-                    mySubscriptions && mySubscriptions.length > 0 && mySubscriptions.map((data, idx) =>
-                      <TableRow key={idx}>
-                        <TableCell className="w-[50px]">{idx + 1}</TableCell>
-                        <TableCell className="font-medium">{data.paymentId}</TableCell>
-                        <TableCell>{formatData(data.started_at)}</TableCell>
-                        <TableCell>{formatData(data.plan_expired)}</TableCell>
-                        <TableCell>${data.price}</TableCell>
-                        <TableCell className="text-right"><div className={styles.actionBtn} onClick={() => { handleCancelSubscription(data.subscription) }}>Cancel Subscription</div>
-                        </TableCell>
-                      </TableRow>)
-                  }
-                </TableBody>
-              </Table>
-            </DialogContent>
+      
+
+        {<>
+     
 
 
-          </Dialog>
-        </div>}
+       <Dialog>
+              <DialogTrigger asChild>
+                {/* <Button variant="outline">Edit Profile</Button> */}
+                
+                <button className={styles.tApiDetectorKey}>
+                <h4><svg xmlns="http://www.w3.org/2000/svg" width="24" height="25" viewBox="0 0 24 25" fill="none"><path d="M20.1903 10.8225C19.6029 10.2352 18.822 9.91195 17.9915 9.91195H17.7665V6.8212C17.7665 3.66408 15.1982 1.0957 12.0412 1.0957H11.8295C8.67259 1.0957 6.10403 3.66408 6.10403 6.8212V9.91177H5.87903C5.04859 9.91177 4.26766 10.2352 3.68022 10.8225C3.09297 11.4099 2.76953 12.1908 2.76953 13.0215V20.7937C2.76953 21.6243 3.09297 22.4053 3.68022 22.9923C4.26747 23.5798 5.04841 23.9032 5.87903 23.9032H17.9915C18.8222 23.9032 19.6031 23.5798 20.1905 22.9923C20.7778 22.4051 21.1012 21.6241 21.1012 20.7937V13.0215C21.1012 12.191 20.7778 11.4101 20.1903 10.8225ZM7.60403 6.8212C7.60403 4.49133 9.49947 2.5957 11.8295 2.5957H12.0412C14.3711 2.5957 16.2665 4.49133 16.2665 6.8212V9.91177H7.60403V6.8212ZM19.6012 20.7937C19.6012 21.2173 19.4293 21.632 19.1298 21.9316C18.8257 22.2358 18.4215 22.4032 17.9915 22.4032H5.87903C5.44909 22.4032 5.04503 22.2358 4.74072 21.9315C4.43678 21.6277 4.26934 21.2236 4.26934 20.7937V13.0215C4.26934 12.5915 4.43678 12.1871 4.74072 11.8831C5.04484 11.5792 5.44891 11.4118 5.87884 11.4118H17.9913C18.4213 11.4118 18.8255 11.5792 19.1295 11.883C19.4336 12.1873 19.601 12.5915 19.601 13.0215L19.6012 20.7937Z" fill="#fff"></path><path d="M11.9355 14.8364C11.5214 14.8364 11.1855 15.1722 11.1855 15.5864V18.2287C11.1855 18.6429 11.5214 18.9787 11.9355 18.9787C12.3497 18.9787 12.6855 18.6429 12.6855 18.2287V15.5864C12.6855 15.1722 12.3497 14.8364 11.9355 14.8364Z" fill="#fff"></path></svg>
+                Change Password</h4>
+                </button>
+              </DialogTrigger>
+
+              {/* ============change password pop up ========= */}
+              <DialogContent className="sm:max-w-[425px]">
+                
+                  <DialogHeader>
+                    <DialogTitle>Change Password</DialogTitle>
+                    <DialogDescription>
+                      Make changes to your Password here. Click save when you're done.
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="grid gap-4 py-4">
+                  <form onSubmit={handleChangePassword}>
+          <div className="grid gap-4">
+            <div className="grid gap-2">
+              <div className="flex items-center">
+                <Label htmlFor="currentPassword">Current Password</Label>
+              </div>
+              <Input
+                id="currentPassword"
+                type="password"
+                value={currentPassword}
+                onChange={(e) => setCurrentPassword(e.target.value)}
+              />
+            </div>
+
+            <div className="grid gap-2">
+              <div className="flex items-center">
+                <Label htmlFor="newPassword">New Password</Label>
+              </div>
+              <Input
+                id="newPassword"
+                type={showPassword ? "text" : "password"}
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+              />
+            </div>
+
+            <div className="grid gap-2">
+              <div className="flex items-center">
+                <Label htmlFor="confirmNewPassword">Confirm New Password</Label>
+              </div>
+              <Input
+                id="confirmNewPassword"
+                type={showPassword ? "text" : "password"}
+                value={confirmNewPassword}
+                onChange={(e) => setConfirmNewPassword(e.target.value)}
+              />
+            </div>
+
+            <Button type="submit" className="w-full">
+              Submit
+            </Button>
+
+           
+          </div>
+        </form>
+                  </div>
+              
+               
+              </DialogContent>
+
+              {/* =========edit form end======= */}
+            </Dialog>
+            
+            
+            </>
+            
+            }
       </div>
     </div>
 

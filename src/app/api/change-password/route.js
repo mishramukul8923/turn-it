@@ -1,3 +1,4 @@
+
 import { hash, compare } from 'bcrypt'; // Ensure you have bcrypt installed
 import createConnection from '@/app/lib/db'; // Adjust this path if necessary
 import { NextResponse } from 'next/server';
@@ -8,7 +9,7 @@ const SECRET_KEY = process.env.JWT_SECRET; // Replace with your secret key
 export async function POST(req) {
     // Get the token from the Authorization header
     const token = req.headers.get('Authorization')?.split(' ')[1];
-    console.log("Received token:", token);
+    // console.log("Received token:", token);
 
     if (!token) {
         return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -17,7 +18,7 @@ export async function POST(req) {
     try {
         // Verify the token
         const decoded = jwt.verify(token, SECRET_KEY);
-        console.log("Decoded token:", decoded);
+        // console.log("Decoded token:", decoded);
 
         // Check for token expiration
         const currentTime = Math.floor(Date.now() / 1000);
@@ -27,9 +28,9 @@ export async function POST(req) {
 
         const userEmail = decoded.email; // Assuming the email is stored in the token
         const { currentPassword, newPassword, confirmNewPassword } = await req.json();
-        console.log("Current password:", currentPassword);
-        console.log("New password:", newPassword);
-        console.log("Confirm password:", confirmNewPassword);
+        // console.log("Current password:", currentPassword);
+        // console.log("New password:", newPassword);
+        // console.log("Confirm password:", confirmNewPassword);
 
         // Validate passwords
         if (!currentPassword || !newPassword || !confirmNewPassword) {
@@ -49,7 +50,7 @@ export async function POST(req) {
         
       // Fetch the user's current password from the database
     const user = await db.collection('user').findOne({ email: userEmail });
-    console.log("User from database:", user);
+    // console.log("User from database:", user);
 
     if (!user) {
         return NextResponse.json({ error: 'User not found' }, { status: 404 });
@@ -58,7 +59,7 @@ export async function POST(req) {
 
     // Compare the current password with the stored hashed password
     const isCurrentPasswordValid = await compare(currentPassword, user.password);
-    console.log("Is current password valid?", isCurrentPasswordValid);
+    // console.log("Is current password valid?", isCurrentPasswordValid);
 
     if (!isCurrentPasswordValid) {
         return NextResponse.json({ error: 'Current password is incorrect' }, { status: 400 });

@@ -5,6 +5,9 @@ import { useEffect, useState } from 'react';
 import styles from "./page.module.css"
 import { Image } from 'react-bootstrap';
 import { useRouter } from 'next/navigation';
+import Head from 'next/head';
+
+
 
 const PaymentSuccess = () => {
   const [sessionData, setSessionData] = useState(null);
@@ -200,6 +203,30 @@ const PaymentSuccess = () => {
   return (
     <>
 
+<Head>
+  <title>Payment Successful | TurnIt</title>
+  <meta name="description" content="Your payment has been successfully processed. Thank you for subscribing to TurnIt!" />
+  <meta name="keywords" content="TurnIt, payment successful, subscription, payment confirmation" />
+  <meta name="author" content="TurnIt Team" />
+  
+  {/* <!-- Open Graph Meta Tags for Social Media Sharing --> */}
+  <meta property="og:title" content="Payment Successful | TurnIt" />
+  <meta property="og:description" content="Your payment has been successfully processed. Thank you for subscribing to TurnIt!" />
+  <meta property="og:url" content="https://turnit.vercel.app/payment-success" />
+  <meta property="og:image" content="https://turnit.vercel.app/images/payment-success-image.png" />
+  <meta property="og:type" content="website" />
+  
+  {/* <!-- Twitter Card Meta Tags --> */}
+  <meta name="twitter:title" content="Payment Successful | TurnIt" />
+  <meta name="twitter:description" content="Your payment has been successfully processed. Thank you for subscribing to TurnIt!" />
+  <meta name="twitter:image" content="https://turnit.vercel.app/images/payment-success-image.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  
+  {/* <!-- Favicon --> */}
+  <link rel="icon" href="https://turnit.vercel.app/favicon.ico" />
+</Head>
+
+
       <div className={styles.paymentPageMsg}>
         {loading ? (
           <div className="ml-loader ml-loader-humanizer">
@@ -222,7 +249,7 @@ const PaymentSuccess = () => {
             </div>
             <svg width="86" height="86" viewBox="0 0 86 86" fill="none" xmlns="http://www.w3.org/2000/svg">
               <rect width="86" height="86" rx="41.9512" fill="#0AB27D" />
-              <path d="M59.7797 30.4152L36.7066 53.4883L26.2188 43.0005" stroke="white" strokeWidth="5.2439" stroke-linecap="round" stroke-linejoin="round" />
+              <path d="M59.7797 30.4152L36.7066 53.4883L26.2188 43.0005" stroke="white" stroke-width="5.2439" stroke-linecap="round" stroke-linejoin="round" />
             </svg>
             <h1 className={styles.paymentHead}>Payment Success</h1>
             {sessionData && (

@@ -18,6 +18,7 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar"
 import { useState } from "react";
+import Head from "next/head";
 
 export default function Page() {
   const [fetchData, setFetchData] = useState(false);
@@ -29,6 +30,37 @@ export default function Page() {
   }
   return (
     <>
+      <Head>
+        <title>Humanize AI-Generated Content</title>
+        <meta 
+          name="description" 
+          content="Convert AI-generated text into more human-readable, natural, and engaging content with our Humanizer tool." 
+        />
+        <meta 
+          name="keywords" 
+          content="AI-generated content, humanize, text conversion, natural language, AI text, content editing, content humanizer" 
+        />
+        <meta name="author" content="Your Website Name" />
+        
+        {/* Open Graph meta tags for better social media sharing */}
+        <meta property="og:title" content="Humanize AI-Generated Content" />
+        <meta 
+          property="og:description" 
+          content="Convert AI-generated text into more human-readable, natural, and engaging content with our Humanizer tool." 
+        />
+        <meta property="og:image" content="/images/ai-humanizer-preview.jpg" />
+        <meta property="og:url" content="https://turnit.vercel.app/humanizer" />
+        <meta property="og:type" content="website" />
+        
+        {/* Twitter Card meta tags */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Humanize AI-Generated Content" />
+        <meta 
+          name="twitter:description" 
+          content="Convert AI-generated text into more human-readable, natural, and engaging content with our Humanizer tool." 
+        />
+        <meta name="twitter:image" content="/images/ai-humanizer-preview.jpg" />
+      </Head>
      <ThemeProvider
             attribute="class"
             defaultTheme="system"

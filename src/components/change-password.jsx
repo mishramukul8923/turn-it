@@ -3,6 +3,8 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useToast } from "@/hooks/use-toast";
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import { Button } from "@/components/ui/button";
 import {
@@ -30,6 +32,16 @@ export function ChangePassword() {
     setShowPassword(!showPassword);
   };
 
+
+  // Function to validate the password
+  const validatePassword = (password) => {
+    // Regex for min 5 chars, 1 special char, 1 number
+    const passwordRegex = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{5,}$/;
+    return passwordRegex.test(password);
+  };
+
+
+
   const handleChangePassword = async (event) => {
     event.preventDefault();
     const token = localStorage.getItem('token'); // Retrieve the token from local storage
@@ -39,16 +51,27 @@ export function ChangePassword() {
       toast({
         title: 'Error',
         description: 'All fields are required!',
-        variant: "destructive",
+        variant: 'error',
       });
       return;
     }
+
+    
+    if (!validatePassword(newPassword)) {
+      toast({
+        title: 'Error',
+        description: 'Password must be at least 5 characters long, include 1 special character, and 1 number.',
+        variant: 'error',
+      });
+      return;
+    }
+
 
     if (newPassword !== confirmNewPassword) {
       toast({
         title: 'Error',
         description: 'New password and confirm password do not match!',
-        variant: "destructive",
+        variant: 'error',
       });
       return;
     }
@@ -101,7 +124,7 @@ export function ChangePassword() {
       toast({
         title: 'Error',
         description: error.message,
-         variant: "destructive",
+        variant: 'error',
       });
     }
   };
@@ -155,7 +178,7 @@ export function ChangePassword() {
               Submit
             </Button>
 
-            <Button type="button" className="w-full" onClick={() => route.push("/dashboard/dashaccount")}>
+            <Button type="button" className="w-full" onClick={() => route.push("/dashboard")}>
               Cancel
             </Button>
           </div>
