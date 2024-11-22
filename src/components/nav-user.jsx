@@ -75,7 +75,7 @@ export function NavUser({ user }) {
       toast({
         title: 'Error',
         description: 'Error logging out. Please try again.',
-        variant: 'error',
+         variant: "destructive",
       });
     }
   };
