@@ -93,98 +93,6 @@ export const POST = async (req) => {
 };
 
 
-// export const PUT = async (req) => {
-//     let db;
-//     try {
-//         // Step 1: Connect to the database
-//         db = await createConnection();
-//         console.log("Database connection established.");
-
-//         // Step 2: Parse the request body
-//         let body;
-//         try {
-//             body = await req.json();
-//             console.log("Received request body:", body);
-//         } catch (error) {
-//             console.error("Invalid JSON in request body:", error);
-//             return NextResponse.json(
-//                 { error: "Invalid JSON in request body." },
-//                 { status: 400 }
-//             );
-//         }
-
-//         // Step 3: Validate required fields
-//         if (!body.email) {
-//             console.error("Missing required 'email' field in request body.");
-//             return NextResponse.json(
-//                 { error: "The 'email' field is required in the request body." },
-//                 { status: 400 }
-//             );
-//         }
-
-//         const { email, ...updateFields } = body;
-
-//         // Step 4: Ensure there are fields to update
-//         if (!Object.keys(updateFields).length) {
-//             console.error("No fields provided to update.");
-//             return NextResponse.json(
-//                 { error: "At least one key-value pair is required to update." },
-//                 { status: 400 }
-//             );
-//         }
-
-//         // Step 5: Restrict certain fields from being updated
-//         const restrictedFields = ['_id', 'password', 'createdAt'];
-//         if (Object.keys(updateFields).some((key) => restrictedFields.includes(key))) {
-//             console.error("Attempted update contains restricted fields.");
-//             return NextResponse.json(
-//                 { error: "Update contains restricted fields." },
-//                 { status: 400 }
-//             );
-//         }
-
-//         // Step 6: Perform the database update
-//         try {
-//             const result = await db.collection('user').findOneAndUpdate(
-//                 { email },
-//                 { $set: updateFields },
-//                 { returnDocument: 'after' }
-//             );
-
-//             // Handle case where the user is not found
-//             if (!result.email) {
-//                 console.error(`User not found with email: ${email}`);
-//                 return NextResponse.json(
-//                     { error: "User not found with the provided email." },
-//                     { status: 404 }
-//                 );
-//             }
-
-//             // Return the updated user (excluding sensitive fields)
-//             // const { _id, ...user } = result.value;
-//             // console.log("User updated successfully:", user);
-//             return NextResponse.json({
-//                 message: "User updated successfully.",
-//                 // user,
-//             });
-//         } catch (queryError) {
-//             console.error("Database query failed:", queryError);
-//             return NextResponse.json(
-//                 { error: "An error occurred while updating the user." },
-//                 { status: 500 }
-//             );
-//         }
-//     } catch (error) {
-//         console.error("Unexpected API error:", error);
-//         return NextResponse.json(
-//             { error: "An internal server error occurred." },
-//             { status: 500 }
-//         );
-//     }
-
-    
-
-// };
 
 
 
@@ -208,7 +116,7 @@ export const PUT = async (req) => {
             );
         }
 
-        const { email, subscription, plan_id, expired_at, prompt, ...updateFields } = body;
+        const { email, plan_id, expired_at, prompt, subscription, ...updateFields } = body;
 
         // Step 4: Validate email-based updates
         if (!email) {
@@ -223,7 +131,6 @@ export const PUT = async (req) => {
         if (Array.isArray(subscription) && subscription.length > 0) {
             // Fetch the current user document to get existing subscriptions
             const currentUser = await db.collection("user").findOne({ email });
-            console.log("currentUser : ", currentUser);
             if (currentUser && Array.isArray(currentUser.subscription)) {
                 // Append new subscriptions to the existing array
                 const updatedSubscriptions = [...new Set([...currentUser.subscription, ...subscription])]; // Use Set to avoid duplicates
@@ -231,7 +138,6 @@ export const PUT = async (req) => {
             } else {
                 updateFields.subscription = subscription; // If no existing subscriptions, just set the new ones
             }
-            console.log("updateFields : ", updateFields);
         }
 
         // Check if user exists
@@ -246,19 +152,12 @@ export const PUT = async (req) => {
 
         // Check if expired_at is not expired
         const currentDate = new Date();
-        if (currentUser.expired_at && new Date(currentUser.expired_at) > currentDate) {
-            // Add plan_id to plan_queue
-            if (!currentUser.plan_queue) {
-                currentUser.plan_queue = []; // Initialize if it doesn't exist
-            }
-            currentUser.plan_queue.push(plan_id); // Add the new plan_id
-            updateFields.plan_queue = currentUser.plan_queue; // Update the plan_queue
-        } else {
-            // Update plan_id, expired_at, and prompt
-            updateFields.plan_id = plan_id; // Update plan_id
-            updateFields.expired_at = expired_at; // Update expired_at
-            updateFields.prompt = prompt; // Update prompt
-        }
+
+        // Update plan_id, expired_at, and prompt
+        updateFields.plan_id = plan_id; // Update plan_id
+        updateFields.expired_at = expired_at; // Update expired_at
+        updateFields.prompt = prompt; // Update prompt
+
 
         // Ensure there are fields to update
         if (!Object.keys(updateFields).length) {
@@ -350,8 +249,8 @@ const handleSocialLogin = async (user) => {
                 auth: false,    // Adjust as per your requirements
                 social: true,   // Mark as social user
                 temporary: false, // Adjust as per your requirements
-                resetToken: null, // Additional fields as required
-                resetTokenExpiration: null,
+                // resetToken: null, // Additional fields as required
+                // resetTokenExpiration: null,
                 subscription: [], // Adjust as per your requirements
                 token: null // Additional field if needed
             };
@@ -397,8 +296,8 @@ const handleRegistration = async (data) => {
                 auth: false,      // Adjust as per your requirements
                 social: false,    // Adjust as per your requirements
                 temporary: true,  // Adjust as per your requirements
-                resetToken: null, // Additional fields as required
-                resetTokenExpiration: null,
+                // resetToken: null, // Additional fields as required
+                // resetTokenExpiration: null,
                 subscription: [], // Adjust as per your requirements
                 token: null,         // Additional field if needed
                 createdAt: new Date(),  // Set the createdAt timestamp to the current date and time

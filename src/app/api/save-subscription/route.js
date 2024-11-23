@@ -12,127 +12,112 @@ export async function POST(req) {
 
   const collection = db.collection('subscription'); // "subscription" collection in MongoDB
 
-  // Ensure email is defined before using it in getNearDate
-  let email;
-
   const calculatePlanExpired = (latestPlan, data) => {
     const latestPlanExpired = latestPlan?.plan_expired ? new Date(latestPlan.plan_expired) : null;
     const createdAt = data?.created_at ? new Date(data.created_at) : null;
     const existingPlanExpired = data?.plan_expired ? new Date(data.plan_expired) : null;
 
     if (latestPlanExpired && createdAt) {
-      // Calculate new expiration date by adding the difference
       const newExpirationTime = new Date(latestPlanExpired - createdAt + (existingPlanExpired?.getTime() || 0));
-      return newExpirationTime.toISOString(); // Return the result in ISO 8601 format
+      return newExpirationTime.toISOString(); // ISO 8601 format
     }
-
-    // Fallback to existing expiration date or null
     return existingPlanExpired ? existingPlanExpired.toISOString() : null;
   };
 
-  async function getNearDate(date1) {
-    try {
-      const today = new Date();
+  const fetchExpiredDate = async (plan_expiry, userEmail) => {
+    const user = await db.collection('user').findOne({ email: userEmail });
   
-      // Ensure email is available here (you should pass it to the function or make it globally accessible)
-      if (!email) {
-        throw new Error("Email is not provided.");
+    if (user) {
+      const userExpiredAt = user.expired_at ? new Date(user.expired_at) : null;
+      const currentDate = new Date();
+  
+      // If user does not have an expiration date, default to plan_expiry
+      if (userExpiredAt === null) {
+        return plan_expiry;
       }
   
-      // Fetch plans with expired_at in the future
-      const planTable = await collection
-        .find({ email, expired_at: { $gt: today } })
-        .sort({ started_at: -1 })
-        .toArray();
-  
-      // Get the first plan matching the criteria
-      const firstPlan = planTable.length > 0 ? planTable[0] : null;
-  
-      // Handle the case where no valid plans are found
-      if (!firstPlan || !firstPlan.expiry) {
-        return date1;
+      // If user's plan has expired
+      if (userExpiredAt < currentDate) {
+        return plan_expiry;
       }
   
-      const date2 = firstPlan.expiry;
-  
-      // Ensure date1 is valid
-      if (!date1 || isNaN(new Date(date1).getTime())) {
-        throw new Error("Invalid date1 provided.");
+      // If user's plan is active and they have prompts > 0 (not -99)
+      if (user.prompt > 0 && user.prompt !== -99) {
+        return null; // No action needed, plan is still active
       }
   
-      // Ensure date2 is valid
-      if (!date2 || isNaN(new Date(date2).getTime())) {
-        return date1;
+      // If user's plan has expired but prompt is 0
+      if (user.prompt === 0) {
+        const daysRemaining = Math.ceil((userExpiredAt - currentDate) / (1000 * 60 * 60 * 24));
+        const newDate =  new Date(new Date(plan_expiry).getTime() + daysRemaining * 24 * 60 * 60 * 1000).toISOString();
+        return newDate
       }
-  
-      // Compare and return the earlier date
-      return new Date(date1) < new Date(date2) ? date1 : date2;
-    } catch (error) {
-      return date1; // Return null or handle as needed in the calling context
     }
-  }
-
+  
+    return null; // Return null if user not found or no conditions met
+  };
+  
 
   try {
     const data = await req.json();
-    email = data?.email || null; // Assign email here
+    const email = data?.email || null; // Assign email here
+    const userId = data?.userId || null; // Extract email
 
-    // Validate email before proceeding
     if (!email) {
       return NextResponse.json({ error: 'Email is required' }, { status: 400 });
     }
 
     // Fetch plans and get the latest one
-    const planTable = await collection
-      .find({ email })
-      .sort({ plan_expired: -1 })
-      .toArray();
-
+    const planTable = await collection.find({ userId }).sort({ plan_expired: -1 }).toArray();
     const latestPlan = planTable.length > 1 ? planTable[0] : {};
 
-    // Validate essential fields and add fallback for optional fields
+    // Prepare subscription data
     const subscriptionData = {
       userId: data?.userId || null,
       email: email,
       totalAmount: data?.totalAmount || 0,
-      status: data?.status || 'active', // Default to 'active' if status is not provided
+      status: data?.status || 'active',
       startDate: data?.createdTimestamp ? new Date(data.createdTimestamp) : null,
-      currentPeriodStart: data?.currentPeriodStart
-        ? new Date(data.currentPeriodStart)
-        : null,
+      currentPeriodStart: data?.currentPeriodStart ? new Date(data.currentPeriodStart) : null,
       currentPeriodEnd: data?.currentPeriodEnd ? new Date(data.currentPeriodEnd) : null,
       paymentId: data?.paymentIntentId || null,
       trialStart: data?.trialStart ? new Date(data.trialStart) : null,
       trialEnd: data?.trialEnd ? new Date(data.trialEnd) : null,
       price: data?.price || 0,
       planType: data?.planType || '',
-      plan_expired: calculatePlanExpired(latestPlan, data),
+      plan_expired: await fetchExpiredDate(data.plan_expired, email),
       plan_id: data?.plan_id || '-1',
       created_at: data?.created_at || new Date().toISOString(),
-      started_at: new Date(latestPlan?.plan_expired).getTime() > new Date(data?.created_at).getTime()
-        ? latestPlan?.plan_expired
-        : data?.created_at,
+      started_at: data?.created_at,
       customerId: data?.customer,
       subscription: data?.subscription,
       prompt: data.prompt
     };
 
-    // Validate required fields
     if (!subscriptionData?.userId || !subscriptionData?.email) {
       return NextResponse.json({ error: 'userId and email are required fields' }, { status: 400 });
     }
 
-    // Save data to MongoDB
-    const result = await collection.insertOne(subscriptionData);
+    // Ensure only one entry for the paymentId
+    const existingEntry = await collection.findOneAndUpdate(
+      { paymentId: subscriptionData.paymentId }, // Query by paymentId
+      { $set: subscriptionData }, // Update with new data
+      { upsert: true, returnDocument: 'after' } // Insert if not found
+    );
 
-    // Send success response with inserted data details
+    if (!existingEntry) {
+      return NextResponse.json({ error: 'Failed to save subscription' }, { status: 500 });
+    }
+
+    // Return success response
     return NextResponse.json({
       message: 'Subscription saved successfully!',
-      id: result.insertedId,
-      expiry: await getNearDate(subscriptionData?.plan_expired)
+      id: data?.userId,
+      subscription: subscriptionData.paymentId,
+      expiry: subscriptionData?.plan_expired
     });
   } catch (error) {
-    console.log('Error saving subscription:', error);
+    console.error('Error saving subscription:', error);
     return NextResponse.json({ error: 'Failed to save subscription', details: error.message }, { status: 500 });
   }
 }

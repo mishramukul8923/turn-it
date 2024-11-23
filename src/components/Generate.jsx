@@ -286,7 +286,7 @@ const Generate = ({ fetchData }) => {
         const plan_id = localStorage.getItem("plan_id");
         switch (plan_id) {
             case "-1":
-                return `Plan Expired`;
+                return `No Active Plan`;
             case "1":
                 return `Basic (Monthly)`;
             case "2":
@@ -354,7 +354,7 @@ const Generate = ({ fetchData }) => {
                                 </div>
                                 {(plan_id == -3 || plan_id == -1) ? (
                                     <div className="plan-expired">
-                                        Plan Expired <MdDoNotDisturb size={16} />
+                                        No Active Plan <MdDoNotDisturb size={16} />
                                     </div>
                                 ) : (
                                     <button type='submit' className={styles.turnitgenerateButton}>
@@ -487,7 +487,7 @@ const Generate = ({ fetchData }) => {
                                     />
                                     {(plan_id == -3 || plan_id == -1) ? (
                                         <div className={`plan-expired small-btn ${styles.turnitGeninputbtn}`}>
-                                            Plan Expired <MdDoNotDisturb size={16} />
+                                            No Active Plan <MdDoNotDisturb size={16} />
                                         </div>
                                     ) : (
                                         <button className={styles.turnitGeninputbtn}>

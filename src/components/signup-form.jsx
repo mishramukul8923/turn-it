@@ -35,11 +35,39 @@ export function SignUpForm() {
     const isEmailValid = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     const isPasswordValid = (password) =>
       /^(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{5,}$/.test(password);
-
+    if (!firstname) {
+      toast({
+        title: "Invalid Field",
+        description: "First name cannot be empty.",
+        variant: "destructive",
+      });
+      setIsLoading(false);
+      return;
+    }
+    
+    if (!lastname) {
+      toast({
+        title: "Invalid Field",
+        description: "Last name cannot be empty.",
+        variant: "destructive",
+      });
+      setIsLoading(false);
+      return;
+    }
+    
     if (!isEmailValid(email)) {
       toast({
         title: "Invalid Email",
         description: "Please enter a valid email address.",
+        variant: "destructive",
+      });
+      setIsLoading(false);
+      return;
+    }
+    if (!password) {
+      toast({
+        title: "Invalid Field",
+        description: "Password cannot be empty.",
         variant: "destructive",
       });
       setIsLoading(false);
@@ -66,7 +94,7 @@ export function SignUpForm() {
       auth: false,
       subscription: [],
       social: false,
-      plan_id: 0,
+      plan_id: -1,
     };
 
     try {
@@ -91,7 +119,7 @@ export function SignUpForm() {
       localStorage.setItem("name", firstname + " " + lastname);
       localStorage.getItem("plan_id", 0);
       toast({
-        title: "Sign Up Successful",
+        title: "Sign Up Successful...Please verify your Email",
         description: result.message || "Welcome!",
       });
       setFirstname("");

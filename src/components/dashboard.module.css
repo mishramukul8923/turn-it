@@ -337,7 +337,7 @@ color: white !important;
 }
 .plansBtn{
     padding: 4px 14px;
-    background: #6F4EE3;
+    border: 1px solid #6F4EE3;
     border-radius: 20px;
 }
 
@@ -1256,30 +1256,38 @@ padding-bottom: 14px;
 
 
 
-.tApiDetectorKey h4{
+.tApiDetectorKeywdth h4{
     display: flex;
-    align-items: center;
-    gap: 10px;
-    padding-top: 20px;
-    color: #FAFAFA;
-    font-family: "Inter";
-    font-size: 24px;
-    font-weight: 600;
-    letter-spacing: -0.4px;
-    margin: 0;
-    line-height: 1;
-    transition: 0.2s;
+        align-items: center;
+        gap: 10px;
+        /* padding-top: 20px; */
+        color: #FAFAFA;
+        font-family: "Inter";
+        font-size: 12px;
+        font-weight: 500;
+        letter-spacing: -0.4px;
+        margin: 0;
+        line-height: 14.4px;
+        transition: 0.2s;
+        border: 1px solid #FFFFFF;
+        border-radius: 8px;
+        width: max-content;
+        padding: 7px 8px;
     }
+    /* .tApiDetectorKeywdth{
+        width: max-content;
+    } */
     
-    .tApiDetectorKey h4:hover{
+    .tApiDetectorKeywdth h4:hover{
         color: #6F4EE3;
+        border-color: #6F4EE3;
     }
     
-    .tApiDetectorKey h4 svg path{
+    .tApiDetectorKeywdth h4 svg path{
         transition: 0.2s;
     }
     
-    .tApiDetectorKey h4:hover svg path{
+    .tApiDetectorKeywdth h4:hover svg path{
         fill: #6F4EE3;
     }
     
@@ -1289,8 +1297,8 @@ padding-bottom: 14px;
         font-family: "Inter";
         font-size: 14px;
         font-weight: 500;
-        border-radius: 12px ;
-        padding: 7px 16px ;
+        border-radius: 6px ;
+        padding: 8px 10px ;
         display: flex;
         align-items: center;
         width: max-content;
@@ -1551,7 +1559,7 @@ padding-bottom: 14px;
     font-family: "Inter";
     font-size: 14px;
     font-weight: 500;
-    border-radius: 12px ;
+    border-radius: 6px ;
     padding: 7px 16px ;
     display: flex;
     align-items: center;
@@ -1566,4 +1574,8 @@ padding-bottom: 14px;
 }
 .actionBtn{
     margin-top: unset;
+}
+.editBtn{
+    display: flex;
+    gap: 15px;
 }

@@ -57,6 +57,7 @@ export function LoginForm() {
       }
 
       localStorage.setItem("plan_id", result.plan_id);
+      localStorage.setItem("my_prompt", result.prompt || 0);
       localStorage.setItem("email", postData.email);
       localStorage.setItem("image", result?.image);
       localStorage.setItem('userId', result.id);
@@ -68,7 +69,7 @@ export function LoginForm() {
       });
 
       setTimeout(() => {
-        router.push("/dashboard");
+        router.push("/dashboard/humanizer");
       }, 1000);
 
       if (result.token) {
@@ -78,7 +79,7 @@ export function LoginForm() {
         console.error('Login successful, but no token received');
       }
     } catch (error) {
-      console.error('Error:', error.message);
+      // console.error('Error:', error.message);
       toast({
         title: "Error",
         description: error.message,

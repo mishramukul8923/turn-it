@@ -39,29 +39,21 @@ export const POST = async (req) => {
 
     // Determine the new plan
     let newPlan = users.plan_id;
-    const humanizerCount = await db.collection('humanizer').find({ user_id }).count();
-    const generatorCount = await db.collection('generator').find({ user_id }).count();
-
-    if (users.plan_id === '-1' || new Date(users.expired_at) < new Date() || users.prompt === 0) {
+    let myPrompt = users.prompt;
+   
+    if (users.plan_id == '-1' || new Date(users.expired_at) < new Date() || users.prompt == 0) {
       newPlan = '-1';
-    } else if (users.prompt === -1) {
+    } else if (users.prompt == -99) {
       // Do nothing, keep the same plan_id
     } else if (users.prompt > 0) {
       newPlan = users.plan_id;
+      myPrompt = myPrompt - 1;
       await db.collection('user').updateOne(
         { email },
         { $set: { prompt: users.prompt - 1 } }
       );
     } else {
-      if (humanizerCount > 2 && generatorCount > 2) {
         newPlan = '-1';
-      } else if (generatorCount > 2) {
-        newPlan = '-3';
-      } else if (humanizerCount > 2) {
-        newPlan = '-2';
-      } else {
-        newPlan = '0';
-      }
     }
 
     // Update the user's plan_id
@@ -77,6 +69,7 @@ export const POST = async (req) => {
         data: {
           insertedId: result.insertedId,
           plan_id: newPlan,
+          prompt: myPrompt
         },
       },
       { status: 200 }
