@@ -13,8 +13,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast"; // Import ShadCN toast
 
-
-
 export function ForgotPassword() {
   const [email, setEmail] = useState('');
   const router = useRouter(); // Initialize router
@@ -78,9 +76,6 @@ export function ForgotPassword() {
   };
 
   return (
-    <>
-  
- 
     <Card className="mx-auto max-w-sm turnitfgt">
       <CardHeader>
         <CardTitle className="text-2xl">Forgot Password</CardTitle>
@@ -114,6 +109,5 @@ export function ForgotPassword() {
         </form>
       </CardContent>
     </Card>
-     </>
   );
 }

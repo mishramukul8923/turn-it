@@ -5,20 +5,6 @@ import { useEffect, useState } from 'react';
 import styles from "./page.module.css"
 import { Image } from 'react-bootstrap';
 import { useRouter } from 'next/navigation';
-import Head from 'next/head';
-import { Button } from "@/components/ui/button"
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog"
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { toast } from '@/hooks/use-toast';
 
 const PaymentSuccess = () => {
   const [sessionData, setSessionData] = useState(null);
@@ -31,40 +17,24 @@ const PaymentSuccess = () => {
 
   useEffect(() => {
     // if (typeof window != 'undefined') { // Check if running in the browser
-    const tempId = localStorage.getItem("userId")
-    const tempemail = localStorage.getItem("email");
-    setUserId(tempId);
-    setEmail(tempemail)
+      const tempId = localStorage.getItem("userId")
+      const tempemail = localStorage.getItem("email");
+      setUserId(tempId);
+      setEmail(tempemail)
     // }
-  }, []);
-
-  const fetchPrompt = (id) => {
-    switch (id) {
-      case "1":
-        return 50;
-      case "2":
-        return 100;
-      case "4":
-        return 600;
-      case "5":
-        return 1200;
-      default:
-        return -99;
-    }
-  }
+}, []);
 
 
 
-  const updateUser = async (newPlan, subscription_id, expiry) => {
-
+  const updateUser = async (newPlan, subscription_id) => {
+   
     const body = {
       email: email,
       plan_id: newPlan,
-      subscription: [subscription_id],
-      prompt: fetchPrompt(newPlan),
-      expired_at: expiry
+      subscription: [subscription_id]
     };
 
+    console.log("Request body:", body);
 
     try {
       const response = await fetch('/api/users', {
@@ -76,14 +46,16 @@ const PaymentSuccess = () => {
       });
 
       const rawText = await response.text(); // Raw response
+      console.log("Raw response:", rawText);
 
       const data = JSON.parse(rawText);
+      console.log("Parsed response:", data);
 
       if (!response.ok) {
         console.error("API Error:", data.error);
       } else {
         localStorage.setItem("plan_id", newPlan);
-        localStorage.setItem("my_prompt", body.prompt || 0);
+        console.log("User updated successfully:", data.user);
       }
     } catch (error) {
       console.log("Unexpected error occurred:", error.message);
@@ -132,6 +104,23 @@ const PaymentSuccess = () => {
     fetchSessionData();
   }, []);
 
+  const fetchPrompt = (id) => {
+      switch (id) {
+        case 1:
+          return 50;
+        case 2: 
+        return 100;
+
+        case 4: 
+          return 600;
+
+        case 5: 
+        return 1200;
+      
+        default:
+          return -1;
+      }
+  }
 
   // Create and save subscription data only once after sessionData is set
   useEffect(() => {
@@ -140,7 +129,6 @@ const PaymentSuccess = () => {
       const planType = new URLSearchParams(window.location.search).get('planType'); // Fetch planType from URL
       const expired_at = new URLSearchParams(window.location.search).get('expired_at');
       const id = new URLSearchParams(window.location.search).get('id');
-      setAddKey(id == '3' ? true : false)
 
       const subscriptionData = {
         userId: userId,
@@ -159,8 +147,7 @@ const PaymentSuccess = () => {
         created_at: new Date(),
         plan_id: id,
         customerId: sessionData?.customer,
-        subscription: sessionData?.subscription,
-        prompt: fetchPrompt(id),
+        subscription: sessionData?.subscription
       };
 
       const saveSubscriptionData = async () => {
@@ -173,7 +160,7 @@ const PaymentSuccess = () => {
 
           const saveResult = await saveResponse.json();
           if (saveResponse.ok) {
-            updateUser(id, sessionData?.subscription, saveResult.expiry)
+            updateUser(id, sessionData?.subscription, saveResult.prompt) 
             setHasSaved(true); // Set flag to prevent duplicate saves
           } else {
             console.log("Failed to save subscription front:", saveResult.error);
@@ -190,20 +177,8 @@ const PaymentSuccess = () => {
 
 
   const [timer, setTimer] = useState(null);
-  const [addKey, setAddKey] = useState(false);
-  const [dialogOpen, setDialogOpen] = useState(false);
-
-  // useEffect(() => {
-  //   if (!dialogOpen) {
-  //     setAddKey(false);
-  //   }
-  // }, [dialogOpen])
 
   useEffect(() => {
-    // if (addKey) {
-    //   setDialogOpen(true);
-    //   return
-    // }
     if (timer == null) {
       return;
     }
@@ -219,73 +194,10 @@ const PaymentSuccess = () => {
     }, 1000);
 
     return () => clearInterval(clockTime); // Cleanup on unmount
-  }, [timer, addKey]);
-
-  const [cloudKey, setCloudKey] = useState('')
-
-  const saveCloudKey = async () => {
-    const body = {
-      userId: localStorage.getItem("userId"),
-      cloudKey: cloudKey
-    }
-    try {
-      const saveResponse = await fetch('/api/apiKeys', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body),
-      });
-
-      const saveResult = await saveResponse.json();
-      if (saveResponse.ok) {
-        setAddKey(false);
-        toast({
-          title: "Success",
-          description: "API keys updated successfully.",
-        });
-        setDialogOpen(false);
-      } else {
-        toast({
-          title: "Error",
-          description: "Failed to save API keys.",
-          variant: "destructive",
-        });
-
-      }
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Something went wrong.",
-        variant: "destructive",
-      });
-    }
-  }
+  }, [timer]);
 
   return (
     <>
-
-      <Head>
-        <title>Payment Successful | TurnIt</title>
-        <meta name="description" content="Your payment has been successfully processed. Thank you for subscribing to TurnIt!" />
-        <meta name="keywords" content="TurnIt, payment successful, subscription, payment confirmation" />
-        <meta name="author" content="TurnIt Team" />
-
-        {/* <!-- Open Graph Meta Tags for Social Media Sharing --> */}
-        <meta property="og:title" content="Payment Successful | TurnIt" />
-        <meta property="og:description" content="Your payment has been successfully processed. Thank you for subscribing to TurnIt!" />
-        <meta property="og:url" content="https://turnit.vercel.app/payment-success" />
-        <meta property="og:image" content="https://turnit.vercel.app/images/payment-success-image.png" />
-        <meta property="og:type" content="website" />
-
-        {/* <!-- Twitter Card Meta Tags --> */}
-        <meta name="twitter:title" content="Payment Successful | TurnIt" />
-        <meta name="twitter:description" content="Your payment has been successfully processed. Thank you for subscribing to TurnIt!" />
-        <meta name="twitter:image" content="https://turnit.vercel.app/images/payment-success-image.png" />
-        <meta name="twitter:card" content="summary_large_image" />
-
-        {/* <!-- Favicon --> */}
-        <link rel="icon" href="https://turnit.vercel.app/favicon.ico" />
-      </Head>
-
 
       <div className={styles.paymentPageMsg}>
         {loading ? (
@@ -309,7 +221,7 @@ const PaymentSuccess = () => {
             </div>
             <svg width="86" height="86" viewBox="0 0 86 86" fill="none" xmlns="http://www.w3.org/2000/svg">
               <rect width="86" height="86" rx="41.9512" fill="#0AB27D" />
-              <path d="M59.7797 30.4152L36.7066 53.4883L26.2188 43.0005" stroke="white" strokeWidth="5.2439" stroke-linecap="round" stroke-linejoin="round" />
+              <path d="M59.7797 30.4152L36.7066 53.4883L26.2188 43.0005" stroke="white" stroke-width="5.2439" stroke-linecap="round" stroke-linejoin="round" />
             </svg>
             <h1 className={styles.paymentHead}>Payment Success</h1>
             {sessionData && (
@@ -325,35 +237,6 @@ const PaymentSuccess = () => {
               </div>
             )}
           </div>}
-      </div>
-      <div>
-        {/* <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Cloud Key</DialogTitle>
-              <DialogDescription>
-                Enter Cloud Key Here.
-              </DialogDescription>
-            </DialogHeader>
-            <div className="grid gap-4 py-4">
-              <div className="grid grid-cols-1 items-center gap-4">
-                <Label htmlFor="apiKey" className="text-left">
-                  API Key
-                </Label>
-                <Input
-                  id="apiKey"
-                  placeholder="Enter Api Key"
-                  className="w-full"
-                  onChange={(e) => { setCloudKey(e.target.value) }}
-                />
-              </div>
-            </div>
-            <DialogFooter>
-              <Button onClick={() => { saveCloudKey() }}>Save changes</Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog> */}
-
       </div>
     </>)
 };

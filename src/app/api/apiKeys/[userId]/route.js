@@ -6,6 +6,9 @@ import { ObjectId } from "mongodb";
 export async function GET(req, { params }) {
   const { userId } =await params; // Extract userId from the dynamic route
 
+// const userId = "672daf0549f3b3dcda8d069b"
+  console.log("Received userId:", userId);
+
   // Validate userId format
   if (!userId) {
     return NextResponse.json(
@@ -20,6 +23,7 @@ export async function GET(req, { params }) {
 
     // Fetch user data by userId (since userId is a string in the database)
     const userData = await db.collection("apiKeys").findOne({ userId: userId });
+    console.log("userData", userData)
 
     // Handle case where no user data is found
     if (!userData) {

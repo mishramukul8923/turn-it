@@ -7,8 +7,6 @@ import { useRouter } from "next/navigation";
 import { Skeleton } from "@/components/ui/skeleton"
 import { Input } from "@/components/ui/input"
 
-
-
 import {
   Pagination,
   PaginationContent,
@@ -96,9 +94,6 @@ const HistoryHumanizer = () => {
 };
 
   return (
-    <>
-  
-    
     <div className={styles.turnitApiDetectorheadingbg}>
       <div className={styles.turnitApiDetectorheadingsrch}>
       <div>
@@ -330,7 +325,6 @@ const HistoryHumanizer = () => {
       )}
 
     </div>
-    </>
   );
 };
 

@@ -337,7 +337,7 @@ color: white !important;
 }
 .plansBtn{
     padding: 4px 14px;
-    border: 1px solid #6F4EE3;
+    background: #6F4EE3;
     border-radius: 20px;
 }
 
@@ -427,11 +427,6 @@ color: white !important;
 
 .tApiDetectorKey {
     flex: 0 0 32%;
-}
-.subCancle{
-    display: flex;
-    gap: 20px;
-    align-items: center;
 }
 
 .turnitApiDetectorBgbtn button {
@@ -745,7 +740,7 @@ background: green;
     font-size: 16px;
     font-weight: 400;
     line-height: 140%;
-    min-height: 67.2px;
+
 }
 
 .planType {
@@ -1256,38 +1251,30 @@ padding-bottom: 14px;
 
 
 
-.tApiDetectorKeywdth h4{
+.tApiDetectorKey h4{
     display: flex;
-        align-items: center;
-        gap: 10px;
-        /* padding-top: 20px; */
-        color: #FAFAFA;
-        font-family: "Inter";
-        font-size: 12px;
-        font-weight: 500;
-        letter-spacing: -0.4px;
-        margin: 0;
-        line-height: 14.4px;
-        transition: 0.2s;
-        border: 1px solid #FFFFFF;
-        border-radius: 8px;
-        width: max-content;
-        padding: 7px 8px;
+    align-items: center;
+    gap: 10px;
+    padding-top: 20px;
+    color: #FAFAFA;
+    font-family: "Inter";
+    font-size: 24px;
+    font-weight: 600;
+    letter-spacing: -0.4px;
+    margin: 0;
+    line-height: 1;
+    transition: 0.2s;
     }
-    /* .tApiDetectorKeywdth{
-        width: max-content;
-    } */
     
-    .tApiDetectorKeywdth h4:hover{
+    .tApiDetectorKey h4:hover{
         color: #6F4EE3;
-        border-color: #6F4EE3;
     }
     
-    .tApiDetectorKeywdth h4 svg path{
+    .tApiDetectorKey h4 svg path{
         transition: 0.2s;
     }
     
-    .tApiDetectorKeywdth h4:hover svg path{
+    .tApiDetectorKey h4:hover svg path{
         fill: #6F4EE3;
     }
     
@@ -1297,8 +1284,8 @@ padding-bottom: 14px;
         font-family: "Inter";
         font-size: 14px;
         font-weight: 500;
-        border-radius: 6px ;
-        padding: 8px 10px ;
+        border-radius: 12px ;
+        padding: 7px 16px ;
         display: flex;
         align-items: center;
         width: max-content;
@@ -1468,9 +1455,6 @@ padding-bottom: 14px;
         padding-top: 10px;
         flex-wrap: wrap;
     }
-    .planPara {
-        min-height: unset;
-    }
 }
 
 
@@ -1559,12 +1543,12 @@ padding-bottom: 14px;
     font-family: "Inter";
     font-size: 14px;
     font-weight: 500;
-    border-radius: 6px ;
+    border-radius: 12px ;
     padding: 7px 16px ;
     display: flex;
     align-items: center;
     width: max-content;
-    margin-top: 0px;
+    margin-top: 20px;
     transition: 0.2s;
     cursor: pointer;
 }
@@ -1574,8 +1558,4 @@ padding-bottom: 14px;
 }
 .actionBtn{
     margin-top: unset;
-}
-.editBtn{
-    display: flex;
-    gap: 15px;
 }

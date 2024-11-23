@@ -36,7 +36,7 @@ export const handleLogin = async (data) => {
 
         // Check if the user exists
         const admin = await collection.findOne({ email }); // Find the admin by email
-        // console.log("Retrieved user from database:", admin);
+        console.log("Retrieved user from database:", admin);
 
         if (!admin) {
             // No user found
@@ -68,3 +68,11 @@ export const handleLogin = async (data) => {
         return NextResponse.json({ error: error.message }, { status: 500 });
     } 
 };
+
+
+
+
+
+
+
+

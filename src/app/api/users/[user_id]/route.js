@@ -7,7 +7,7 @@ export async function GET(req, { params }) {
   try {
     const { user_id: userId } =   await params; // Get user_id from the dynamic route
    
-//  console.log("this is userid in api", userId)
+ console.log("this is userid in api", userId)
     // Validate the userId format (MongoDB ObjectId)
     if (!ObjectId.isValid(userId)) {
       return NextResponse.json({ error: "Invalid userId format" }, { status: 400 });
