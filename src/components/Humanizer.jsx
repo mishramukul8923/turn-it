@@ -162,7 +162,11 @@ const Humanizer = ({ fetchData, updatePrompt }) => {
         toast({
           title: 'Error',
           description: 'Something Went Wrong, Please Try Again.',
+<<<<<<< HEAD
           variant: "destructive",
+=======
+           variant: "destructive",
+>>>>>>> 3b25b7e68e3c45c56bf36aa36d9c4d518a8f6315
         });
       }
 
@@ -458,6 +462,7 @@ const Humanizer = ({ fetchData, updatePrompt }) => {
         </div>
       </div>
 
+<<<<<<< HEAD
       {/* Second Container */}
       {isSecondContainerVisible && (
         <div className='turnitHumanizerPercentbg'>
@@ -472,6 +477,22 @@ const Humanizer = ({ fetchData, updatePrompt }) => {
           </div>
           <div className='turnitHumanizerPercentleft'>
             {/* <div className='thplscanbg'>
+=======
+            {/* Second Container */}
+            {isSecondContainerVisible && (
+                <div className='turnitHumanizerPercentbg'>
+                    <div className='turnitHumanizerPercentright'>
+                        <h2>Humanized Text</h2>
+                        <div className='thprNumber'>
+                            <h4>75%</h4>
+                            <h5>Of text is likely Humanized</h5>
+                            <h5>Confidence: High</h5>
+                            <p>1,070,992/216,000 Credits left</p>
+                        </div>
+                    </div>
+                    <div className='turnitHumanizerPercentleft'>
+                        {/* <div className='thplscanbg'>
+>>>>>>> 3b25b7e68e3c45c56bf36aa36d9c4d518a8f6315
                             <button className='thplscan'>
                                 <div className='thplscanimgfirst'>
                                     <div className='thplscanimg'>
@@ -549,6 +570,7 @@ const Humanizer = ({ fetchData, updatePrompt }) => {
                                 </div>
                             </button>
                         </div> */}
+<<<<<<< HEAD
             <div className='turnithumanizehighlight'>
               <div className='turnithumanizehighlightshow'>
                 <div className='thzhlsflex'>
@@ -577,6 +599,36 @@ const Humanizer = ({ fetchData, updatePrompt }) => {
                   <ToastContainer position="top-right" autoClose={3000} hideProgressBar />
                 </div>
               </div>
+=======
+                        <div className='turnithumanizehighlight'>
+                            <div className='turnithumanizehighlightshow'>
+                                <div className='thzhlsflex'>
+                                    {/* <div className={styles.planTogglechat} onClick={togglePlanhumanize}>
+                                        <div className={`${styles.circlechat} ${isActive ? styles.active : ''}`}></div>
+                                    </div> */}
+                                    <p>Content Generated</p>
+                                </div>
+                                <div className={styles.turnitGenPaste}>
+                                    <div className="tooltip-container">
+                                        <button onClick={handleCopyClick}>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 25 25" fill="none">
+                                                <g clipPath="url(#clip0_738_1427)">
+                                                    <path d="M13.4475 20.5526C14.7731 20.551 16.044 20.0237 16.9813 19.0864C17.9186 18.1491 18.4459 16.8782 18.4475 15.5526V6.79563C18.4491 6.26999 18.3463 5.74927 18.1451 5.26365C17.9439 4.77803 17.6483 4.33717 17.2755 3.96663L15.0335 1.72463C14.663 1.3518 14.2221 1.05623 13.7365 0.85505C13.2509 0.653867 12.7302 0.551074 12.2045 0.55263H7.44751C6.12191 0.554218 4.85107 1.08151 3.91373 2.01885C2.97639 2.95619 2.4491 4.22703 2.44751 5.55263V15.5526C2.4491 16.8782 2.97639 18.1491 3.91373 19.0864C4.85107 20.0237 6.12191 20.551 7.44751 20.5526H13.4475ZM4.44751 15.5526V5.55263C4.44751 4.75698 4.76358 3.99392 5.32619 3.43131C5.8888 2.8687 6.65186 2.55263 7.44751 2.55263C7.44751 2.55263 12.3665 2.56663 12.4475 2.57663V4.55263C12.4475 5.08306 12.6582 5.59177 13.0333 5.96684C13.4084 6.34192 13.9171 6.55263 14.4475 6.55263H16.4235C16.4335 6.63363 16.4475 15.5526 16.4475 15.5526C16.4475 16.3483 16.1314 17.1113 15.5688 17.674C15.0062 18.2366 14.2432 18.5526 13.4475 18.5526H7.44751C6.65186 18.5526 5.8888 18.2366 5.32619 17.674C4.76358 17.1113 4.44751 16.3483 4.44751 15.5526ZM22.4475 8.55263V19.5526C22.4459 20.8782 21.9186 22.1491 20.9813 23.0864C20.044 24.0237 18.7731 24.551 17.4475 24.5526H8.44751C8.18229 24.5526 7.92794 24.4473 7.7404 24.2597C7.55287 24.0722 7.44751 23.8178 7.44751 23.5526C7.44751 23.2874 7.55287 23.0331 7.7404 22.8455C7.92794 22.658 8.18229 22.5526 8.44751 22.5526H17.4475C18.2432 22.5526 19.0062 22.2366 19.5688 21.674C20.1314 21.1113 20.4475 20.3483 20.4475 19.5526V8.55263C20.4475 8.28741 20.5529 8.03306 20.7404 7.84552C20.9279 7.65799 21.1823 7.55263 21.4475 7.55263C21.7127 7.55263 21.9671 7.65799 22.1546 7.84552C22.3422 8.03306 22.4475 8.28741 22.4475 8.55263Z" fill="#6F767E" />
+                                                </g>
+                                                <defs>
+                                                    <clipPath id="clip0_738_1427">
+                                                        <rect width="24" height="24" fill="white" transform="translate(0.44751 0.552631)" />
+                                                    </clipPath>
+                                                </defs>
+                                            </svg>
+                                            Copy
+                                        </button>
+                                        <span className="tooltip-text">Copy Text</span>
+                                    </div>
+                                    <ToastContainer position="top-right" autoClose={3000} hideProgressBar />
+                                </div>
+                            </div>
+>>>>>>> 3b25b7e68e3c45c56bf36aa36d9c4d518a8f6315
 
               <div className='thzhlstextarea'>
                 <div className='thzhlstextareaparagraph'>

@@ -159,7 +159,11 @@ const DashAccount = () => {
       toast({
         title: 'Error',
         description: 'Please select an image to upload.',
+<<<<<<< HEAD
         variant: "destructive",
+=======
+         variant: "destructive",
+>>>>>>> 3b25b7e68e3c45c56bf36aa36d9c4d518a8f6315
       });
       return;
     }
@@ -194,7 +198,11 @@ const DashAccount = () => {
       toast({
         title: 'Error',
         description: 'Error uploading image. Please try again.',
+<<<<<<< HEAD
         variant: "destructive",
+=======
+         variant: "destructive",
+>>>>>>> 3b25b7e68e3c45c56bf36aa36d9c4d518a8f6315
       });
     }
   };
@@ -331,9 +339,15 @@ const DashAccount = () => {
       const result = await response.json();
   
       toast({
+<<<<<<< HEAD
         title: "Profile updated successfully.",
         description: "Please use a different email.",
         variant: "default",
+=======
+        title: 'Error',
+        description: error.message,
+         variant: "destructive",
+>>>>>>> 3b25b7e68e3c45c56bf36aa36d9c4d518a8f6315
       });
     } catch (error) {
       console.error(error);
@@ -352,7 +366,11 @@ const DashAccount = () => {
       toast({
         title: 'Error',
         description: 'User is not authenticated.',
+<<<<<<< HEAD
         variant: "destructive",
+=======
+         variant: "destructive",
+>>>>>>> 3b25b7e68e3c45c56bf36aa36d9c4d518a8f6315
       });
       return;
     }
@@ -386,7 +404,11 @@ const DashAccount = () => {
       toast({
         title: 'Error',
         description: 'Error removing image. Please try again.',
+<<<<<<< HEAD
         variant: "destructive",
+=======
+         variant: "destructive",
+>>>>>>> 3b25b7e68e3c45c56bf36aa36d9c4d518a8f6315
       });
     }
   };
@@ -579,7 +601,11 @@ const DashAccount = () => {
         toast({
           title: 'Error',
           description: 'Something Went Wrong, Please Try Again.',
+<<<<<<< HEAD
           variant: "destructive",
+=======
+           variant: "destructive",
+>>>>>>> 3b25b7e68e3c45c56bf36aa36d9c4d518a8f6315
         });
         throw new Error('Error canceling subscription');
       }

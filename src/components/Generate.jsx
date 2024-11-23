@@ -178,7 +178,7 @@ const Generate = ({ fetchData }) => {
                 toast({
                     title: 'Error',
                     description: 'Something Went Wrong, Please Try Again.',
-                    variant: "destructive",
+                     variant: "destructive",
                 });
             }
 
@@ -193,7 +193,7 @@ const Generate = ({ fetchData }) => {
             toast({
                 title: 'Error',
                 description: 'An error occurred while submitting data.',
-                variant: "destructive",
+                 variant: "destructive",
             });
         }
     };
@@ -211,7 +211,7 @@ const Generate = ({ fetchData }) => {
                 toast({
                     title: 'Error',
                     description: 'Failed to copy text.',
-                    variant: "destructive",
+                     variant: "destructive",
                 });
             });
     };
