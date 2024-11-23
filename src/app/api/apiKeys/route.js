@@ -29,7 +29,7 @@
 //         // Respond with success and the saved data
 //         return NextResponse.json({ message: "API keys saved successfully", data: result }, { status: 200 });
 //     } catch (error) {
-//         console.error("Error handling request:", error);
+//         console.log("Error handling request:", error);
 //         return NextResponse.json({ error: "Failed to save API keys" }, { status: 500 });
 //     }
 // }
@@ -73,7 +73,7 @@
 //         // Respond with success and the saved data
 //         return NextResponse.json({ message: "API keys saved successfully", data: result }, { status: 200 });
 //     } catch (error) {
-//         console.error("Error handling request:", error);
+//         console.log("Error handling request:", error);
 //         return NextResponse.json({ error: "Failed to save API keys" }, { status: 500 });
 //     }
 // }
@@ -88,7 +88,7 @@
 //         const apiKeys = await db.collection('apiKeys').findOne({});
 //         return NextResponse.json(apiKeys || {});
 //     } catch (error) {
-//         console.error("Error fetching API keys:", error);
+//         console.log("Error fetching API keys:", error);
 //         return NextResponse.json({ error: "Failed to load API keys" }, { status: 500 });
 //     }
 // }
@@ -97,35 +97,24 @@ import { NextResponse } from "next/server";
 import createConnection from "@/app/lib/db";
 
 
-export async function PUT(req) {
+export async function POST(req) {
   try {
     // Establish database connection
     const db = await createConnection();
 
     // Parse request body
-    const { userId, gptZeroApiKey, zeroGptApiKey, originalityApiKey, copyLeaksApiKey } = await req.json();
+    const { userId, cloudKey } = await req.json();
 
     // Construct the API key data to update
-    const apiKeyData = {
-      ...(gptZeroApiKey && { gptZeroApiKey }),
-      ...(zeroGptApiKey && { zeroGptApiKey }),
-      ...(originalityApiKey && { originalityApiKey }),
-      ...(copyLeaksApiKey && { copyLeaksApiKey }),
-    };
-
     // Validate request data
     if (!userId ) {
       return NextResponse.json({ error: "Invalid or missing userId" }, { status: 400 });
     }
 
-    if (Object.keys(apiKeyData).length === 0) {
-      return NextResponse.json({ error: "Please provide at least one API key." }, { status: 400 });
-    }
-
     // Perform the update operation
     const result = await db.collection("apiKeys").updateOne(
       { userId: userId }, // Match by userId
-      { $set: { ...apiKeyData, updatedAt: new Date() } }, // Update fields and set updatedAt timestamp
+      { $set: { cloudKey : cloudKey, updatedAt: new Date() } }, // Update fields and set updatedAt timestamp
       { upsert: true } // Create a new document if no match is found
     );
 
@@ -135,7 +124,7 @@ export async function PUT(req) {
       { status: 200 }
     );
   } catch (error) {
-    console.error("Error updating API keys:", error);
+    console.log("Error updating API keys:", error);
     return NextResponse.json({ error: "Failed to update API keys" }, { status: 500 });
   }
 }

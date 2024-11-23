@@ -32,6 +32,8 @@ const handleLogin = async (data) => {
 
     // Check if the user exists
     const users = await db.collection('user').findOne({ email });
+    console.log("this is useer login user", users)
+    const auth = users.auth;
     if (!users) {
         // No user found
         return NextResponse.json({ error: "User does not exist" }, { status: 404 });
@@ -40,6 +42,10 @@ const handleLogin = async (data) => {
     if (users.password === null) {
         // User exists, but has no password set (e.g., social login only)
         return NextResponse.json({ error: "User registered through social login. Please use social login." }, { status: 400 });
+    }
+    if(!auth){
+        return NextResponse.json({ error: "Please verify your email.." }, { status: 400 });
+
     }
 
     const { password: hashedPassword } = users;
@@ -60,6 +66,7 @@ const handleLogin = async (data) => {
         const id = users._id;
         const image = users.image;
         const plan_id = users.plan_id;
+        const prompt = users.prompt
 
 
         let newPlan = -1; // Default to -1
@@ -80,7 +87,7 @@ const handleLogin = async (data) => {
             { upsert: true, new: true } // Create a new document if it doesn't exist
         );
         // Return the token in the response
-        return NextResponse.json({ message: "Login successful", token, firstname, lastname, id, image, plan_id }, { status: 200 });
+        return NextResponse.json({ message: "Login successful", token, firstname, lastname, id, image, plan_id, prompt }, { status: 200 });
     } else {
         // Passwords do not match
         return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });

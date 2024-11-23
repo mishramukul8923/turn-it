@@ -51,7 +51,7 @@ export function ChangePassword() {
       toast({
         title: 'Error',
         description: 'All fields are required!',
-        variant: 'error',
+        variant: "destructive",
       });
       return;
     }
@@ -61,7 +61,7 @@ export function ChangePassword() {
       toast({
         title: 'Error',
         description: 'Password must be at least 5 characters long, include 1 special character, and 1 number.',
-        variant: 'error',
+         variant: "destructive",
       });
       return;
     }
@@ -71,7 +71,7 @@ export function ChangePassword() {
       toast({
         title: 'Error',
         description: 'New password and confirm password do not match!',
-        variant: 'error',
+        variant: "destructive",
       });
       return;
     }
@@ -124,7 +124,7 @@ export function ChangePassword() {
       toast({
         title: 'Error',
         description: error.message,
-        variant: 'error',
+         variant: "destructive",
       });
     }
   };
@@ -178,7 +178,7 @@ export function ChangePassword() {
               Submit
             </Button>
 
-            <Button type="button" className="w-full" onClick={() => route.push("/dashboard")}>
+            <Button type="button" className="w-full" onClick={() => route.push("/dashboard/dashaccount")}>
               Cancel
             </Button>
           </div>
