@@ -11,9 +11,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-
-
-
 export function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -57,7 +54,6 @@ export function LoginForm() {
       }
 
       localStorage.setItem("plan_id", result.plan_id);
-      localStorage.setItem("my_prompt", result.prompt || 0);
       localStorage.setItem("email", postData.email);
       localStorage.setItem("image", result?.image);
       localStorage.setItem('userId', result.id);
@@ -69,7 +65,7 @@ export function LoginForm() {
       });
 
       setTimeout(() => {
-        router.push("/dashboard/humanizer");
+        router.push("/dashboard");
       }, 1000);
 
       if (result.token) {
@@ -79,7 +75,7 @@ export function LoginForm() {
         console.error('Login successful, but no token received');
       }
     } catch (error) {
-      // console.error('Error:', error.message);
+      console.error('Error:', error.message);
       toast({
         title: "Error",
         description: error.message,
@@ -123,10 +119,6 @@ export function LoginForm() {
   }, [session]);
 
   return (
-
-    <>
- 
-
     <Card className="mx-auto max-w-sm">
       <CardHeader>
         <CardTitle className="text-2xl">Login</CardTitle>
@@ -173,6 +165,5 @@ export function LoginForm() {
         </div>
       </CardContent>
     </Card>
-    </>
   );
 }

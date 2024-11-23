@@ -84,11 +84,7 @@
     margin-top: 50px;
     float: left;
 }
-.turnitApiDetectorheadingsrch{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
+
 @media(max-width: 768px){
     .turnitGenPaste {
         flex-direction: column;

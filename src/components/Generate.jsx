@@ -178,7 +178,7 @@ const Generate = ({ fetchData }) => {
                 toast({
                     title: 'Error',
                     description: 'Something Went Wrong, Please Try Again.',
-                     variant: "destructive",
+                    variant: 'error',
                 });
             }
 
@@ -193,7 +193,7 @@ const Generate = ({ fetchData }) => {
             toast({
                 title: 'Error',
                 description: 'An error occurred while submitting data.',
-                 variant: "destructive",
+                variant: 'error',
             });
         }
     };
@@ -211,7 +211,7 @@ const Generate = ({ fetchData }) => {
                 toast({
                     title: 'Error',
                     description: 'Failed to copy text.',
-                     variant: "destructive",
+                    variant: 'error',
                 });
             });
     };
@@ -286,7 +286,7 @@ const Generate = ({ fetchData }) => {
         const plan_id = localStorage.getItem("plan_id");
         switch (plan_id) {
             case "-1":
-                return `No Active Plan`;
+                return `Plan Expired`;
             case "1":
                 return `Basic (Monthly)`;
             case "2":
@@ -354,7 +354,7 @@ const Generate = ({ fetchData }) => {
                                 </div>
                                 {(plan_id == -3 || plan_id == -1) ? (
                                     <div className="plan-expired">
-                                        No Active Plan <MdDoNotDisturb size={16} />
+                                        Plan Expired <MdDoNotDisturb size={16} />
                                     </div>
                                 ) : (
                                     <button type='submit' className={styles.turnitgenerateButton}>
@@ -487,7 +487,7 @@ const Generate = ({ fetchData }) => {
                                     />
                                     {(plan_id == -3 || plan_id == -1) ? (
                                         <div className={`plan-expired small-btn ${styles.turnitGeninputbtn}`}>
-                                            No Active Plan <MdDoNotDisturb size={16} />
+                                            Plan Expired <MdDoNotDisturb size={16} />
                                         </div>
                                     ) : (
                                         <button className={styles.turnitGeninputbtn}>

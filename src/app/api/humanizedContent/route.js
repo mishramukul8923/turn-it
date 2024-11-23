@@ -5,7 +5,8 @@ import { ObjectId } from "mongodb";
 export const POST = async (req) => {
   try {
     // Parse the request body
-    const { text, humanizedContent, user_id, email, copied, regenerated } = await req.json();
+    const { text, humanizedContent, user_id, email , copied,
+      regenerated } = await req.json();
 
     // Validate required fields
     if (!text || !humanizedContent) {
@@ -19,48 +20,74 @@ export const POST = async (req) => {
     // Establish database connection
     const db = await createConnection();
 
-    // Fetch the user by email and insert content in one go
-    const [users, result] = await Promise.all([
-      db.collection('user').findOne({ email }),
-      db.collection('humanizer').insertOne({
-        text,
-        humanizedContent,
-        copied,
-        regenerated,
-        user_id,
-        createdAt: new Date(),
-      }),
-    ]);
+    const result = await db.collection('humanizer').insertOne({
+      text,
+      humanizedContent,
+      copied,
+      regenerated,
+      user_id,
+      createdAt: new Date(),
+    });
 
+    // Fetch the user by email
+    const users = await db.collection('user').findOne({ email });
+    console.log('User fetched:', users);
     if (!users) {
       console.error('User not found with email:', email);
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
 
     // Determine the new plan
-    let newPlan = users.plan_id;
-    let myPrompt = users.prompt;
-   
-    if (users.plan_id == '-1' || new Date(users.expired_at) < new Date() || users.prompt == 0) {
+    let newPlan = '-1';
+    if (users.plan_id == '-1') {
       newPlan = '-1';
-    } else if (users.prompt == -99) {
-      // Do nothing, keep the same plan_id
-    } else if (users.prompt > 0) {
-      newPlan = users.plan_id;
-      myPrompt = myPrompt - 1;
-      await db.collection('user').updateOne(
-        { email },
-        { $set: { prompt: users.prompt - 1 } }
-      );
+    } else if (users.plan_id == '0' || users.plan_id == '-2' || users.plan_id == '-3') {
+      const humanizerCount = await db.collection('humanizer').find({ user_id }).count();
+      const generatorCount = await db.collection('generator').find({ user_id }).count();
+
+      if (humanizerCount > 2 && generatorCount > 2) {
+        newPlan = '-1'; // Both counts are greater than 2
+      } else if (generatorCount > 2) {
+        newPlan = '-3'; // Only generatorCount is greater than 2
+      } else if (humanizerCount > 2) {
+        newPlan = '-2'; // Only humanizerCount is greater than 2
+      } else {
+        newPlan = '0'; // Both counts are less than or equal to 2
+      }
     } else {
-        newPlan = '-1';
+      const planTable = await db
+        .collection('subscription')
+        .find({ email }) // Fetch all subscriptions matching the email
+        .sort({ plan_expired: -1 }) // Sort by `plan_expired` in descending order
+        .toArray();
+
+      if (planTable.length > 0) {
+        const latestPlan = planTable[0]; // Get the latest plan
+
+        if (new Date(latestPlan.plan_expired) > new Date()) {
+          const today = new Date();
+
+          // Find the nearest plan to today
+          const nearestPlan = planTable
+            .map(plan => ({
+              ...plan,
+              difference: Math.abs(new Date(plan.plan_expired) - today), // Calculate absolute difference
+            }))
+            .sort((a, b) => a.difference - b.difference)[0]; // Sort by difference and pick the nearest
+
+          newPlan = nearestPlan.plan_id; // Assign the nearest plan's ID
+        } else {
+          newPlan = '-1'; // Fallback if the latest plan is expired
+        }
+      }
     }
 
     // Update the user's plan_id
-    await db.collection('user').updateOne(
+    const updateResult = await db.collection('user').updateOne(
       { email },
       { $set: { plan_id: newPlan } }
     );
+    console.log('Update result:', updateResult);
 
     // Return a success response
     return NextResponse.json(
@@ -69,7 +96,6 @@ export const POST = async (req) => {
         data: {
           insertedId: result.insertedId,
           plan_id: newPlan,
-          prompt: myPrompt
         },
       },
       { status: 200 }
