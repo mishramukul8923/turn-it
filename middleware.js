@@ -6,7 +6,7 @@ export function middleware(request) {
   console.log('Middleware triggered for:', request.nextUrl.pathname);
 
   const isAuthenticated = Boolean(request.cookies.get('token'));
-  // const isAuthenticated = false;
+  // const isAuthenticated = true;
   console.log("auth status", isAuthenticated)
   console.log("middleware is working")
 

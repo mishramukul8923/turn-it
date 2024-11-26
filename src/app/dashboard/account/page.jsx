@@ -1,8 +1,13 @@
 "use client"
 import { AppSidebar } from "@/components/app-sidebar"
-import Humanizer from "@/components/Humanizer";
+import DashAccount from "@/components/DashAccount";
 // import { ModeToggle } from "@/components/mode-toggle";
 import { ThemeProvider } from "@/components/theme-provider";
+import { useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
+import Head from "next/head";
+
+
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -17,63 +22,45 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar"
-import { useEffect, useState } from "react";
-import Head from "next/head";
 
 export default function Page() {
-  const [fetchData, setFetchData] = useState(false);
-  const [myPrompt, setMyPrompt] = useState(0)
+
+  const [myPrompt, setMyPrompt] = useState(0);
 
   useEffect(() => {
-    setMyPrompt(localStorage.getItem("my_prompt") || 0) // prompt to show on ui
+    if (typeof window !== undefined) {
+      setMyPrompt(localStorage.getItem("my_prompt") || 0)
+    }
   }, [])
 
-  const updatePrompt = (value) => {
-    if(myPrompt == -99){
-      return
-    }
-    else{
-      setMyPrompt(value)
-    }
-  }
 
-  const updateinfo = () => {
-    setFetchData(!fetchData)
-    return fetchData
-  }
+
   return (
     <>
       <Head>
-        <title>Humanize AI-Generated Content</title>
-        <meta
-          name="description"
-          content="Convert AI-generated text into more human-readable, natural, and engaging content with our Humanizer tool."
-        />
-        <meta
-          name="keywords"
-          content="AI-generated content, humanize, text conversion, natural language, AI text, content editing, content humanizer"
-        />
-        <meta name="author" content="Your Website Name" />
+        <title>User Profile - Manage Your Personal Information</title>
+        <meta name="description" content="View and edit your personal information, preferences, and settings on your User Profile page. Keep your details up to date with TurnItHuman." />
+        <meta name="keywords" content="user profile, manage profile, personal information, settings, user account, TurnItHuman user page" />
+        <meta name="author" content="TurnItHuman" />
 
-        {/* Open Graph meta tags for better social media sharing */}
-        <meta property="og:title" content="Humanize AI-Generated Content" />
-        <meta
-          property="og:description"
-          content="Convert AI-generated text into more human-readable, natural, and engaging content with our Humanizer tool."
-        />
-        <meta property="og:image" content="/images/ai-humanizer-preview.jpg" />
-        <meta property="og:url" content="https://turnit.vercel.app/humanizer" />
-        <meta property="og:type" content="website" />
+        {/* Open Graph Meta Tags */}
+        <meta property="og:title" content="User Profile - Manage Your Personal Information" />
+        <meta property="og:description" content="Manage your personal information and settings on your TurnItHuman user profile page. Stay updated with your preferences and account details." />
+        <meta property="og:url" content="https://turnit.vercel.app/user-profile" />
+        <meta property="og:type" content="profile" />
+        <meta property="og:image" content="/images/user-profile-preview.jpg" />
 
-        {/* Twitter Card meta tags */}
+        {/* Twitter Meta Tags */}
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Humanize AI-Generated Content" />
-        <meta
-          name="twitter:description"
-          content="Convert AI-generated text into more human-readable, natural, and engaging content with our Humanizer tool."
-        />
-        <meta name="twitter:image" content="/images/ai-humanizer-preview.jpg" />
+        <meta name="twitter:title" content="User Profile - Manage Your Personal Information" />
+        <meta name="twitter:description" content="Update your personal details and account settings on your TurnItHuman user profile page. Customize your preferences anytime." />
+        <meta name="twitter:image" content="/images/user-profile-preview.jpg" />
+
+        {/* Additional Tags for SEO */}
+        <link rel="canonical" href="https://turnit.vercel.app/user-profile" />
+        <meta name="robots" content="index, follow" />
       </Head>
+
       <ThemeProvider
         attribute="class"
         defaultTheme="system"
@@ -81,7 +68,7 @@ export default function Page() {
         disableTransitionOnChange
       >
         <SidebarProvider>
-          <AppSidebar updateinfo={updateinfo} />
+          <AppSidebar />
           <SidebarInset>
             <header className="flex h-16 shrink-0 items-center gap-2 bordhead">
               <div className="flex items-center gap-2 px-4 w-full justify-between">
@@ -96,13 +83,14 @@ export default function Page() {
                     </BreadcrumbItem>
                     <BreadcrumbSeparator className="hidden md:block" />
                     <BreadcrumbItem>
-                      <BreadcrumbPage>Humanizer</BreadcrumbPage>
+                      <BreadcrumbPage>Account</BreadcrumbPage>
                     </BreadcrumbItem>
                     <BreadcrumbItem>
                       {/* <ModeToggle/> */}
                     </BreadcrumbItem>
                   </BreadcrumbList>
                 </Breadcrumb>
+
                 <Breadcrumb className="ml-auto">
                   <BreadcrumbList>
                     <BreadcrumbItem className="px-3 py-2 rounded-md bg-[#232325] mr-8">
@@ -127,7 +115,7 @@ export default function Page() {
               </div>
             </header>
             <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-              <Humanizer fetchData={fetchData} updatePrompt={updatePrompt} />
+              <DashAccount />
             </div>
           </SidebarInset>
         </SidebarProvider>

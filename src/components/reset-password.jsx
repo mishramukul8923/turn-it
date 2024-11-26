@@ -102,6 +102,10 @@ export function ResetPassword() {
       toast({
         title: "Success",
         description: "Password has been reset successfully!",
+        variant: 'success',
+        style: {
+          backgroundColor: "black",
+        }
       });
       setTimeout(() => router.push("/login"), 2000);
     } catch (error) {

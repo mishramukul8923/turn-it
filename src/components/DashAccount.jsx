@@ -4,8 +4,13 @@ import styles from './dashboard.module.css';
 import { Image } from 'react-bootstrap';
 import { useSession } from 'next-auth/react';
 import FetchUserById from '@/utils/FetchUserById';
-
-
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -16,6 +21,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
+
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import DecodeTokenEmail from '@/utils/DecodeTokenEmail';
@@ -33,6 +39,7 @@ import {
 } from "@/components/ui/table"
 import Link from 'next/link';
 import { useToast } from "@/hooks/use-toast";
+import { ChangePassword } from './change-password';
 
 
 
@@ -40,7 +47,6 @@ import { useToast } from "@/hooks/use-toast";
 const DashAccount = () => {
   const my_plan = localStorage.getItem("plan_id");
   const [showAllSubscriptions, setShowAllSubscriptions] = useState(false);
-  const router = useRouter();
   const [userDetails, setUserDetails] = useState(null);
   const [image, setImage] = useState(null);
   const [token, setToken] = useState(null);
@@ -50,18 +56,29 @@ const DashAccount = () => {
   const [apikey, setapikey] = useState('')
   const [mySubscriptions, setMySubscriptions] = useState([])
   const [userId, setUserId] = useState(null)
+  const [showPassword, setShowPassword] = useState(false);
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmNewPassword, setConfirmNewPassword] = useState('');
+  const [open, setOpen] = useState(false); // State to control dialog visibility
+
+
+  const router = useRouter();
+
+
   const { toast } = useToast();
 
 
   useEffect(() => {
     const storedToken = localStorage.getItem('token');
     let userId = localStorage.getItem('userId');
+    localStorage.removeItem("has_processed")
     setToken(storedToken);
     setUserId(userId)
   }, []);
 
   useEffect(() => {
-    console.log("this is success value", success)
+    // console.log("this is success value", success)
     if (success) {
       window.location.reload();
     }
@@ -83,11 +100,11 @@ const DashAccount = () => {
         try {
 
           //   const email = DecodeTokenEmail(token); // Replace with your decoding logic
-          const allUser = await FetchUserById(userId); // Replace with your API call
-          const fetchedUserDetails = allUser.filter((data) => data.email == emailNew);
-          fetchTransactionHistory(fetchedUserDetails[0].subscription)
-          const email = fetchedUserDetails[0].email;
-          setUserDetails(fetchedUserDetails[0]); // Store the fetched details in state
+          const fetchedUserDetails = await FetchUserDetails(localStorage.getItem("email")); // Replace with your API call
+          // const fetchedUserDetails = allUser.filter((data) => data.email == emailNew);
+          fetchTransactionHistory(fetchedUserDetails.subscription)
+          const email = fetchedUserDetails.email;
+          setUserDetails(fetchedUserDetails); // Store the fetched details in state
 
         } catch (error) {
           console.error("Failed to handle token logic:", error);
@@ -108,9 +125,10 @@ const DashAccount = () => {
 
       let firstNameInitial = '';
       let lastNameInitial = '';
+      const name = localStorage.getItem("name")
 
-      if (userDetails.name) {
-        const nameParts = userDetails.name.split(" ");
+      if (name) {
+        const nameParts = name.split(" ");
         firstNameInitial = nameParts[0]?.charAt(0).toUpperCase() || '';
         lastNameInitial = nameParts[1]?.charAt(0).toUpperCase() || ''; // Handles case with two parts (first and last)
       } else if (userDetails.firstname && userDetails.lastname) {
@@ -143,7 +161,7 @@ const DashAccount = () => {
       toast({
         title: 'Error',
         description: 'Please select an image to upload.',
-        variant: 'error',
+        variant: "destructive",
       });
       return;
     }
@@ -172,13 +190,16 @@ const DashAccount = () => {
         title: 'Success',
         description: 'Image uploaded successfully!',
         variant: 'success',
+        style: {
+          backgroundColor: "black",
+        }
       });
     } catch (error) {
       console.error('Error uploading image:', error);
       toast({
         title: 'Error',
         description: 'Error uploading image. Please try again.',
-        variant: 'error',
+        variant: "destructive",
       });
     }
   };
@@ -195,23 +216,114 @@ const DashAccount = () => {
     }
   };
 
+  const checkEmail = async (email) => {
+    // const email = email; // Email to check
+    const apiUrl = `/api/checkEmail/${email}`; // API URL
+
+    try {
+      const response = await fetch(apiUrl, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        // console.error('Error fetching email check:', response.status, response.statusText);
+        return false
+        throw new Error('Failed to check email');
+      }
+
+      const data = await response.json();
+
+      // Handle the response data
+      if (data.data.email) {
+        // console.log('Email is already in use');
+        return true
+      } else {
+        // console.log('Email is available');
+        return false;
+      }
+    } catch (error) {
+      console.error('Error:', error.message);
+
+    }
+  };
+
+
+
+
+
+
+
+
+
+
 
   const handleEditProfile = async (e) => {
-    e.preventDefault()
-    try {
-      const userId = localStorage.getItem('userId');
+    e.preventDefault();
 
+    const userId = localStorage.getItem('userId');
+    const currentEmail = localStorage.getItem('email'); // Store the current email locally
+
+    try {
+      // Check if the email has changed
+      if (userDetails?.email !== currentEmail) {
+
+        const existEmail = await checkEmail(userDetails?.email); // Check if the new email already exists
+
+        console.log("exist email", existEmail)
+
+        if (!existEmail) {
+          console.log("New email does not exist, proceeding with verification."); // Debug log
+          // Trigger email verification
+          const emailResponse = await fetch('/api/users/requestEmailChange', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              userId: userId,
+              newEmail: userDetails?.email,
+            }),
+          });
+
+          if (!emailResponse.ok) {
+            throw new Error('Failed to send verification email');
+          }
+
+          console.log(' ');
+          setOpen(false); // Close the dialog after saving
+          return (
+            toast({
+              title: "Verification email sent!",
+              description: "Please verify your new email.",
+              variant: "default",
+            })
+          ); // Exit the function until the email is verified
+        } else {
+          toast({
+            title: "Email already exists.",
+            description: "Please use a different email.",
+            variant: "destructive",
+          });
+
+          return; // Exit if the email already exists
+        }
+      }
+
+      // Update profile for non-email fields
       const response = await fetch('/api/users/editprofile', {
         method: 'PATCH',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           userId: userId,
           firstname: userDetails?.firstname,
           lastname: userDetails?.lastname,
-          email: userDetails?.email
-        })
+          email: userDetails?.email, // Keep the email field for consistency
+        }),
       });
 
       console.log('Response status:', response.status);
@@ -231,6 +343,9 @@ const DashAccount = () => {
           title: 'Success',
           description: 'Profile updated successfully!',
           variant: 'success',
+          style: {
+            backgroundColor: "black",
+          }
         });
       } else {
         throw new Error(result.error || 'Failed to update profile');
@@ -239,12 +354,13 @@ const DashAccount = () => {
     } catch (error) {
       console.error('Error updating profile:', error);
       toast({
-        title: 'Error',
-        description: error.message,
-        variant: 'error',
+        title: "Profile updated successfully.",
+        description: "Please use a different email.",
+        variant: "default",
       });
     }
   };
+
 
 
 
@@ -256,7 +372,7 @@ const DashAccount = () => {
       toast({
         title: 'Error',
         description: 'User is not authenticated.',
-        variant: 'error',
+        variant: "destructive",
       });
       return;
     }
@@ -281,8 +397,11 @@ const DashAccount = () => {
       setSuccess(true);
       toast({
         title: 'Success',
-        description: 'Profile picture removed successfully!',
+        description: 'Profileimage removed successfully!',
         variant: 'success',
+        style: {
+          backgroundColor: "black",
+        }
       });
 
     } catch (error) {
@@ -290,7 +409,7 @@ const DashAccount = () => {
       toast({
         title: 'Error',
         description: 'Error removing image. Please try again.',
-        variant: 'error',
+        variant: "destructive",
       });
     }
   };
@@ -304,7 +423,7 @@ const DashAccount = () => {
     const plan_id = localStorage.getItem("plan_id");
     switch (plan_id) {
       case "-1":
-        return `Plan Expired`;
+        return `No Active Plan`;
       case "1":
         return `Basic (Monthly)`;
       case "2":
@@ -323,19 +442,112 @@ const DashAccount = () => {
   }
 
 
+  // ====================================================ChangePassword popup============================================
+
+  // Toggle password visibility
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
+
+  // Function to validate the password
+  const validatePassword = (password) => {
+    // Regex for min 5 chars, 1 special char, 1 number
+    const passwordRegex = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{5,}$/;
+    return passwordRegex.test(password);
+  };
 
 
 
+  const handleChangePassword = async (event) => {
+    event.preventDefault();
+    const token = localStorage.getItem('token'); // Retrieve the token from local storage
+
+    // Validate input fields
+    if (!currentPassword || !newPassword || !confirmNewPassword) {
+      toast({
+        title: 'Error',
+        description: 'All fields are required!',
+        variant: "destructive",
+      });
+      return;
+    }
 
 
+    if (!validatePassword(newPassword)) {
+      toast({
+        title: 'Error',
+        description: 'Password must be at least 5 characters long, include 1 special character, and 1 number.',
+        variant: "destructive",
+      });
+      return;
+    }
 
 
+    if (newPassword !== confirmNewPassword) {
+      toast({
+        title: 'Error',
+        description: 'New password and confirm password do not match!',
+        variant: "destructive",
+      });
+      return;
+    }
 
+    const postData = {
+      currentPassword,
+      newPassword,
+      confirmNewPassword,
+    };
 
+    try {
+      const response = await fetch('/api/change-password', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify(postData),
+      });
 
+      let result;
+      try {
+        result = await response.json();
+      } catch (parseError) {
+        throw new Error('Server response was not in JSON format');
+      }
 
+      if (!response.ok) {
+        const errorMessage = result.error || 'Failed to change password';
+        throw new Error(errorMessage);
+      }
 
+      toast({
+        title: 'Success',
+        description: result.message || 'Password changed successfully!',
+        variant: 'success',
+        style: {
+          backgroundColor: "black",
+        }
+      });
 
+      setSuccess(result.message);
+      setTimeout(() => {
+        route.push("/dashboard");
+      }, 1000);
+
+      // Clear form fields
+      setCurrentPassword('');
+      setNewPassword('');
+      setConfirmNewPassword('');
+    } catch (error) {
+      console.error('Error:', error.message);
+      toast({
+        title: 'Error',
+        description: error.message,
+        variant: "destructive",
+      });
+    }
+  };
 
   const handleBack = () => {
     router.back();
@@ -393,7 +605,7 @@ const DashAccount = () => {
         toast({
           title: 'Error',
           description: 'Something Went Wrong, Please Try Again.',
-          variant: 'error',
+          variant: "destructive",
         });
         throw new Error('Error canceling subscription');
       }
@@ -403,6 +615,9 @@ const DashAccount = () => {
           title: 'Success',
           description: 'Subscription canceled successfully!',
           variant: 'success',
+          style: {
+            backgroundColor: "black",
+          }
         });
         setUpdateData(!updateData)
         // handleRemoveSubs(email, subscriptionId);
@@ -483,8 +698,56 @@ const DashAccount = () => {
           </svg>
 
           <p>Account</p>
+          <div className={styles.plansBtn}>{fetchPlan()}</div>
         </div>
-        <div className={styles.plansBtn}>{fetchPlan()}</div>
+        <div>
+          {mySubscriptions.length > 0 && my_plan && ["1", "2", "3", "4", "5", "6"].includes(my_plan) && (<div className={styles.tapicancelsubscription}>
+            <Dialog>
+              <DialogTrigger asChild>
+                <button>
+                  Cancel Subscription
+                </button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[850px]">
+                <DialogHeader>
+                  <DialogTitle>    Cancel Subscription</DialogTitle>
+                  <DialogDescription>
+                    Make changes to your Cancel Subscription here. Click save when you're done.
+                  </DialogDescription>
+                </DialogHeader>
+                <Table className="my-subscriptions">
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="w-[70px]">S no.</TableHead>
+                      <TableHead className="w-[100px]">Invoice</TableHead>
+                      <TableHead>Start Date</TableHead>
+                      <TableHead>Expiry Date</TableHead>
+                      <TableHead >Amount</TableHead>
+                      <TableHead className="text-right">Action</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {
+                      mySubscriptions && mySubscriptions.length > 0 && mySubscriptions.map((data, idx) =>
+                        <TableRow key={idx}>
+                          <TableCell className="w-[50px]">{idx + 1}</TableCell>
+                          <TableCell className="font-medium">{data.paymentId}</TableCell>
+                          <TableCell>{formatData(data.started_at)}</TableCell>
+                          <TableCell>{formatData(data.plan_expired)}</TableCell>
+                          <TableCell>${data.price}</TableCell>
+                          <TableCell className="text-right"><div className={styles.actionBtn} onClick={() => { handleCancelSubscription(data.subscription) }}>Cancel Subscription</div>
+                          </TableCell>
+                        </TableRow>)
+                    }
+                  </TableBody>
+                </Table>
+              </DialogContent>
+
+
+            </Dialog>
+          </div>)}
+        </div>
+
       </div>
 
 
@@ -527,15 +790,15 @@ const DashAccount = () => {
                     <div className="grid gap-4 py-4">
 
                       <div className="items-center flex justify-center">
-                        {userDetails && (
 
-                          <div
-                            className={`${styles.profileInitials} ${styles.tadcProfileImgsetwidth} flex items-center justify-center`}
-                            style={{ backgroundColor: '#8e44ad', color: 'white', width: '96px', height: '96px', borderRadius: '50%' }}
-                          >
-                            {getInitials || <span>No Name</span>}
-                          </div>
-                        )}
+
+                        <div
+                          className={`${styles.profileInitials} ${styles.tadcProfileImgsetwidth} flex items-center justify-center`}
+                          style={{ backgroundColor: '#8e44ad', color: 'white', width: '96px', height: '96px', borderRadius: '50%' }}
+                        >
+                          {getInitials ? getInitials : "User"}
+                        </div>
+
                       </div>
                     </div>
                     <DialogFooter>
@@ -560,87 +823,187 @@ const DashAccount = () => {
                   </DialogContent>
                 </Dialog>
               </div>
+
+
+
+
               <div>
-                <h4>Profile</h4>
+                <div className={styles.editBtn}>
+                  <h4>Profile</h4>
+                  <div className={styles.subCancle}>
+                    <Dialog open={open} onOpenChange={setOpen}>
+                      <DialogTrigger asChild>
+                        {/* <Button variant="outline">Edit Profile</Button> */}
+                        <button>
+                          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"><g clipPath="url(#clip0_346_13990)"><path d="M22.1511 15.0771C21.8209 15.0771 21.5533 15.3447 21.5533 15.6748V20.9819C21.5522 21.9719 20.7501 22.7742 19.7602 22.7751H2.98862C1.99864 22.7742 1.19662 21.9719 1.19545 20.9819V5.40586C1.19662 4.41611 1.99864 3.61385 2.98862 3.61268H8.29576C8.62591 3.61268 8.89348 3.34511 8.89348 3.01496C8.89348 2.68504 8.62591 2.41724 8.29576 2.41724H2.98862C1.33881 2.4191 0.00186789 3.75605 0 5.40586V20.9822C0.00186789 22.632 1.33881 23.9689 2.98862 23.9708H19.7602C21.41 23.9689 22.7469 22.632 22.7488 20.9822V15.6748C22.7488 15.3447 22.4812 15.0771 22.1511 15.0771Z" fill="#FFF"></path><path d="M22.5121 0.878905C21.4616 -0.171549 19.7586 -0.171549 18.7081 0.878905L8.04433 11.5427C7.97124 11.6158 7.91848 11.7064 7.89093 11.8058L6.48861 16.8685C6.43094 17.0761 6.48954 17.2983 6.64178 17.4508C6.79424 17.603 7.01652 17.6616 7.22409 17.6042L12.2868 16.2017C12.3862 16.1741 12.4768 16.1213 12.5499 16.0483L23.2134 5.38425C24.2623 4.3331 24.2623 2.63145 23.2134 1.5803L22.5121 0.878905ZM9.34671 11.9312L18.0742 3.20349L20.8889 6.01817L12.1612 14.7459L9.34671 11.9312ZM8.78448 13.0594L11.0332 15.3083L7.92268 16.1701L8.78448 13.0594ZM22.3682 4.53903L21.7343 5.17295L18.9194 2.35804L19.5536 1.72412C20.137 1.14064 21.0831 1.14064 21.6666 1.72412L22.3682 2.42552C22.9508 3.0097 22.9508 3.95508 22.3682 4.53903Z" fill="#FFF"></path></g><defs><clipPath id="clip0_346_13990"><rect width="24" height="24" fill="white"></rect></clipPath></defs></svg>
+                        </button>
+                      </DialogTrigger>
+
+                      {/* ============edit profile ========= */}
+                      <DialogContent className="sm:max-w-[425px]">
+                        <form onSubmit={handleEditProfile}>
+                          <DialogHeader>
+                            <DialogTitle>Edit Profile</DialogTitle>
+                            <DialogDescription>
+                              Make changes to your profile here. Click save when you're done.
+                            </DialogDescription>
+                          </DialogHeader>
+                          <div className="grid gap-4 py-4">
+                            <div className="grid grid-cols-4 items-center gap-4">
+                              <Label htmlFor="firstname" className="text-right">
+                                First Name
+                              </Label>
+                              <Input
+                                id="name"
+                                placeholder="Enter Name"
+                                value={userDetails?.firstname}
+                                onChange={(e) => setUserDetails({
+                                  ...userDetails,
+                                  firstname: e.target.value
+                                })}
+                                className="col-span-3"
+                              />
+                            </div>
+                            <div className="grid grid-cols-4 items-center gap-4">
+                              <Label htmlFor="lastname" className="text-right">
+                                Last Name
+                              </Label>
+                              <Input
+                                id="name"
+                                placeholder="Enter Name"
+                                value={userDetails?.lastname}
+                                onChange={(e) => setUserDetails({
+                                  ...userDetails,
+                                  lastname: e.target.value
+                                })}
+                                className="col-span-3"
+                              />
+                            </div>
+                            <div className="grid grid-cols-4 items-center gap-4">
+                              <Label htmlFor="username" className="text-right">
+                                Email
+                              </Label>
+                              <Input
+                                type="email"
+                                id="username"
+                                placeholder="Enter Email"
+                                value={userDetails?.email}
+                                onChange={(e) => setUserDetails({
+                                  ...userDetails,
+                                  email: e.target.value
+                                })}
+                                // defaultValue="@peduarte"
+                                className="col-span-3"
+                              />
+                            </div>
+                          </div>
+                          <DialogFooter>
+                            <Button type="submit">Save changes</Button>
+                          </DialogFooter>
+                        </form>
+                      </DialogContent>
+
+                      {/* =========edit form end======= */}
+                    </Dialog>
+                  </div>
+                </div>
                 <p>Your profile information</p>
               </div>
 
 
             </div>
-            <Dialog>
-              <DialogTrigger asChild>
-                {/* <Button variant="outline">Edit Profile</Button> */}
-                <button>
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"><g clipPath="url(#clip0_346_13990)"><path d="M22.1511 15.0771C21.8209 15.0771 21.5533 15.3447 21.5533 15.6748V20.9819C21.5522 21.9719 20.7501 22.7742 19.7602 22.7751H2.98862C1.99864 22.7742 1.19662 21.9719 1.19545 20.9819V5.40586C1.19662 4.41611 1.99864 3.61385 2.98862 3.61268H8.29576C8.62591 3.61268 8.89348 3.34511 8.89348 3.01496C8.89348 2.68504 8.62591 2.41724 8.29576 2.41724H2.98862C1.33881 2.4191 0.00186789 3.75605 0 5.40586V20.9822C0.00186789 22.632 1.33881 23.9689 2.98862 23.9708H19.7602C21.41 23.9689 22.7469 22.632 22.7488 20.9822V15.6748C22.7488 15.3447 22.4812 15.0771 22.1511 15.0771Z" fill="#FFF"></path><path d="M22.5121 0.878905C21.4616 -0.171549 19.7586 -0.171549 18.7081 0.878905L8.04433 11.5427C7.97124 11.6158 7.91848 11.7064 7.89093 11.8058L6.48861 16.8685C6.43094 17.0761 6.48954 17.2983 6.64178 17.4508C6.79424 17.603 7.01652 17.6616 7.22409 17.6042L12.2868 16.2017C12.3862 16.1741 12.4768 16.1213 12.5499 16.0483L23.2134 5.38425C24.2623 4.3331 24.2623 2.63145 23.2134 1.5803L22.5121 0.878905ZM9.34671 11.9312L18.0742 3.20349L20.8889 6.01817L12.1612 14.7459L9.34671 11.9312ZM8.78448 13.0594L11.0332 15.3083L7.92268 16.1701L8.78448 13.0594ZM22.3682 4.53903L21.7343 5.17295L18.9194 2.35804L19.5536 1.72412C20.137 1.14064 21.0831 1.14064 21.6666 1.72412L22.3682 2.42552C22.9508 3.0097 22.9508 3.95508 22.3682 4.53903Z" fill="#FFF"></path></g><defs><clipPath id="clip0_346_13990"><rect width="24" height="24" fill="white"></rect></clipPath></defs></svg>
-                </button>
-              </DialogTrigger>
+            {<>
 
-              {/* ============edit profile ========= */}
-              <DialogContent className="sm:max-w-[425px]">
-                <form onSubmit={handleEditProfile}>
+
+
+              <Dialog>
+                <DialogTrigger asChild>
+                  {/* <Button variant="outline">Edit Profile</Button> */}
+
+                  <button className={styles.tApiDetectorKeywdth}>
+                    <h4><svg xmlns="http://www.w3.org/2000/svg" width="13" height="14" viewBox="0 0 13 14" fill="none">
+                      <g clipPath="url(#clip0_1078_973)">
+                        <path d="M11.0277 6.23694C10.7237 5.93298 10.3195 5.76567 9.88962 5.76567H9.77316V4.1659C9.77316 2.53178 8.44378 1.20239 6.80975 1.20239H6.70018C5.06616 1.20239 3.73667 2.53178 3.73667 4.1659V5.76557H3.62021C3.19038 5.76557 2.78617 5.93298 2.48211 6.23694C2.17815 6.541 2.01074 6.94521 2.01074 7.37514V11.398C2.01074 11.828 2.17815 12.2322 2.48211 12.536C2.78607 12.8401 3.19028 13.0075 3.62021 13.0075H9.88962C10.3196 13.0075 10.7238 12.8401 11.0278 12.536C11.3318 12.2321 11.4992 11.8279 11.4992 11.398V7.37514C11.4992 6.94531 11.3318 6.5411 11.0277 6.23694ZM4.51307 4.1659C4.51307 2.95996 5.49415 1.97879 6.70018 1.97879H6.80975C8.01569 1.97879 8.99677 2.95996 8.99677 4.1659V5.76557H4.51307V4.1659ZM10.7228 11.398C10.7228 11.6173 10.6338 11.832 10.4788 11.987C10.3214 12.1445 10.1122 12.2311 9.88962 12.2311H3.62021C3.39768 12.2311 3.18854 12.1445 3.03103 11.9869C2.87371 11.8297 2.78704 11.6206 2.78704 11.398V7.37514C2.78704 7.15261 2.87371 6.94327 3.03103 6.78595C3.18844 6.62863 3.39758 6.54197 3.62012 6.54197H9.88953C10.1121 6.54197 10.3213 6.62863 10.4786 6.78586C10.636 6.94337 10.7227 7.15261 10.7227 7.37514L10.7228 11.398Z" fill="white" />
+                        <path d="M6.75539 8.31461C6.541 8.31461 6.36719 8.48842 6.36719 8.7028V10.0704C6.36719 10.2848 6.541 10.4586 6.75539 10.4586C6.96977 10.4586 7.14359 10.2848 7.14359 10.0704V8.7028C7.14359 8.48842 6.96977 8.31461 6.75539 8.31461Z" fill="white" />
+                      </g>
+                      <defs>
+                        <clipPath id="clip0_1078_973">
+                          <rect width="12.4224" height="12.4224" fill="white" transform="translate(0.578125 0.894073)" />
+                        </clipPath>
+                      </defs>
+                    </svg>
+                      Change Password</h4>
+                  </button>
+                </DialogTrigger>
+
+                {/* ============change password pop up ========= */}
+                <DialogContent className="sm:max-w-[425px]">
+
                   <DialogHeader>
-                    <DialogTitle>Edit Profile</DialogTitle>
+                    <DialogTitle>Change Password</DialogTitle>
                     <DialogDescription>
-                      Make changes to your profile here. Click save when you're done.
+                      Make changes to your Password here. Click save when you're done.
                     </DialogDescription>
                   </DialogHeader>
                   <div className="grid gap-4 py-4">
-                    <div className="grid grid-cols-4 items-center gap-4">
-                      <Label htmlFor="firstname" className="text-right">
-                        First Name
-                      </Label>
-                      <Input
-                        id="name"
-                        placeholder="Enter Name"
-                        value={userDetails?.firstname}
-                        onChange={(e) => setUserDetails({
-                          ...userDetails,
-                          firstname: e.target.value
-                        })}
-                        className="col-span-3"
-                      />
-                    </div>
-                    <div className="grid grid-cols-4 items-center gap-4">
-                      <Label htmlFor="lastname" className="text-right">
-                        Last Name
-                      </Label>
-                      <Input
-                        id="name"
-                        placeholder="Enter Name"
-                        value={userDetails?.lastname}
-                        onChange={(e) => setUserDetails({
-                          ...userDetails,
-                          lastname: e.target.value
-                        })}
-                        className="col-span-3"
-                      />
-                    </div>
-                    <div className="grid grid-cols-4 items-center gap-4">
-                      <Label htmlFor="username" className="text-right">
-                        Email
-                      </Label>
-                      <Input
-                        type="email"
-                        id="username"
-                        placeholder="Enter Email"
-                        value={userDetails?.email}
-                        onChange={(e) => setUserDetails({
-                          ...userDetails,
-                          email: e.target.value
-                        })}
-                        // defaultValue="@peduarte"
-                        className="col-span-3"
-                      />
-                    </div>
-                  </div>
-                  <DialogFooter>
-                    <Button type="submit">Save changes</Button>
-                  </DialogFooter>
-                </form>
-              </DialogContent>
+                    <form onSubmit={handleChangePassword}>
+                      <div className="grid gap-4">
+                        <div className="grid gap-2">
+                          <div className="flex items-center">
+                            <Label htmlFor="currentPassword">Current Password</Label>
+                          </div>
+                          <Input
+                            id="currentPassword"
+                            type="password"
+                            value={currentPassword}
+                            onChange={(e) => setCurrentPassword(e.target.value)}
+                          />
+                        </div>
 
-              {/* =========edit form end======= */}
-            </Dialog>
+                        <div className="grid gap-2">
+                          <div className="flex items-center">
+                            <Label htmlFor="newPassword">New Password</Label>
+                          </div>
+                          <Input
+                            id="newPassword"
+                            type={showPassword ? "text" : "password"}
+                            value={newPassword}
+                            onChange={(e) => setNewPassword(e.target.value)}
+                          />
+                        </div>
+
+                        <div className="grid gap-2">
+                          <div className="flex items-center">
+                            <Label htmlFor="confirmNewPassword">Confirm New Password</Label>
+                          </div>
+                          <Input
+                            id="confirmNewPassword"
+                            type={showPassword ? "text" : "password"}
+                            value={confirmNewPassword}
+                            onChange={(e) => setConfirmNewPassword(e.target.value)}
+                          />
+                        </div>
+
+                        <Button type="submit" className="w-full">
+                          Submit
+                        </Button>
+
+
+                      </div>
+                    </form>
+                  </div>
+
+
+                </DialogContent>
+
+                {/* =========change Password end======= */}
+              </Dialog>
+
+
+            </>
+
+            }
+
           </div>
 
 
@@ -667,70 +1030,13 @@ const DashAccount = () => {
                             </button> */}
             </div>
           </div>
-          {/* {my_plan != "0" && <><div className={`${styles.tApiDetectorKey} ${styles.cancelBtnParent}`}>
-                        <div className={`${styles.plansBtn} ${styles.cancelSubscription}`} onClick={() => { setShowAllSubscriptions(true); }}>
-                            Cancel Subscription
-                        </div>
-                    </div>
-                        <div className={`${styles.tApiDetectorKey} ${styles.cancelBtnParent}`}>
-                            <div className={`${styles.plansBtn} ${styles.cancelSubscription}`} onClick={() => { handleChangeCard() }}>
-                                Change Card
-                            </div>
-                        </div></>} */}
-          <div className={styles.tApiDetectorKey}>
-            <Link href="/change-password">
-              <h4><svg xmlns="http://www.w3.org/2000/svg" width="24" height="25" viewBox="0 0 24 25" fill="none"><path d="M20.1903 10.8225C19.6029 10.2352 18.822 9.91195 17.9915 9.91195H17.7665V6.8212C17.7665 3.66408 15.1982 1.0957 12.0412 1.0957H11.8295C8.67259 1.0957 6.10403 3.66408 6.10403 6.8212V9.91177H5.87903C5.04859 9.91177 4.26766 10.2352 3.68022 10.8225C3.09297 11.4099 2.76953 12.1908 2.76953 13.0215V20.7937C2.76953 21.6243 3.09297 22.4053 3.68022 22.9923C4.26747 23.5798 5.04841 23.9032 5.87903 23.9032H17.9915C18.8222 23.9032 19.6031 23.5798 20.1905 22.9923C20.7778 22.4051 21.1012 21.6241 21.1012 20.7937V13.0215C21.1012 12.191 20.7778 11.4101 20.1903 10.8225ZM7.60403 6.8212C7.60403 4.49133 9.49947 2.5957 11.8295 2.5957H12.0412C14.3711 2.5957 16.2665 4.49133 16.2665 6.8212V9.91177H7.60403V6.8212ZM19.6012 20.7937C19.6012 21.2173 19.4293 21.632 19.1298 21.9316C18.8257 22.2358 18.4215 22.4032 17.9915 22.4032H5.87903C5.44909 22.4032 5.04503 22.2358 4.74072 21.9315C4.43678 21.6277 4.26934 21.2236 4.26934 20.7937V13.0215C4.26934 12.5915 4.43678 12.1871 4.74072 11.8831C5.04484 11.5792 5.44891 11.4118 5.87884 11.4118H17.9913C18.4213 11.4118 18.8255 11.5792 19.1295 11.883C19.4336 12.1873 19.601 12.5915 19.601 13.0215L19.6012 20.7937Z" fill="#fff"></path><path d="M11.9355 14.8364C11.5214 14.8364 11.1855 15.1722 11.1855 15.5864V18.2287C11.1855 18.6429 11.5214 18.9787 11.9355 18.9787C12.3497 18.9787 12.6855 18.6429 12.6855 18.2287V15.5864C12.6855 15.1722 12.3497 14.8364 11.9355 14.8364Z" fill="#fff"></path></svg>
-                Change Password</h4>
-            </Link>
 
-          </div>
+
         </div>
 
-        {my_plan != "0" && <div className={styles.tapicancelsubscription}>
-          <Dialog>
-            <DialogTrigger asChild>
-              <button>
-                Cancel Subscription
-              </button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-[850px]">
-              <DialogHeader>
-                <DialogTitle>    Cancel Subscription</DialogTitle>
-                <DialogDescription>
-                  Make changes to your Cancel Subscription here. Click save when you're done.
-                </DialogDescription>
-              </DialogHeader>
-              <Table className="my-subscriptions">
-                <TableHeader>
-                  <TableRow>
-                    <TableHead className="w-[70px]">S no.</TableHead>
-                    <TableHead className="w-[100px]">Invoice</TableHead>
-                    <TableHead>Start Date</TableHead>
-                    <TableHead>Expiry Date</TableHead>
-                    <TableHead >Amount</TableHead>
-                    <TableHead className="text-right">Action</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {
-                    mySubscriptions && mySubscriptions.length > 0 && mySubscriptions.map((data, idx) =>
-                      <TableRow key={idx}>
-                        <TableCell className="w-[50px]">{idx + 1}</TableCell>
-                        <TableCell className="font-medium">{data.paymentId}</TableCell>
-                        <TableCell>{formatData(data.started_at)}</TableCell>
-                        <TableCell>{formatData(data.plan_expired)}</TableCell>
-                        <TableCell>${data.price}</TableCell>
-                        <TableCell className="text-right"><div className={styles.actionBtn} onClick={() => { handleCancelSubscription(data.subscription) }}>Cancel Subscription</div>
-                        </TableCell>
-                      </TableRow>)
-                  }
-                </TableBody>
-              </Table>
-            </DialogContent>
 
 
-          </Dialog>
-        </div>}
+
       </div>
     </div>
 

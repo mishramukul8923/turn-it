@@ -19,7 +19,7 @@ export async function GET(req) {
     // Update the user's auth status in MongoDB
     const result = await db.collection('user').updateOne(
       { email }, // Find the user by email
-      { $set: { auth: 1 } } // Update the auth status to 1 (verified)
+      { $set: { auth: true } } // Update the auth status to 1 (verified)
     );
 
     if (result.matchedCount === 0) {

@@ -29,7 +29,7 @@ const ApiKey = () => {
     useEffect(() => {
         const fetchApiKeys = async () => {
             try {
-                const response = await fetch(`/api/apiKeys/672daf0549f3b3dcda8d069b`, { method: 'GET' });
+                const response = await fetch(`/api/apiKeys/${userId}`, { method: 'GET' });
                 // console.log("this is data i get in api response", await response.json())
                 // const data = await response.json();
                 // console.log("final data", data)
@@ -100,6 +100,10 @@ const ApiKey = () => {
                 toast({
                     title: "Success",
                     description: "API keys updated successfully.",
+                    variant: 'success',
+                    style: {
+                        backgroundColor: "black",
+                      }
                 });
             } else {
                 toast({

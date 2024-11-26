@@ -700,3 +700,9 @@ gap: 4px;
 .small-btn{
   max-width: max-content;
 }
+.no-history{
+  margin: 20px 0px;
+}
+.cursor-pointer{
+  cursor: pointer;
+}

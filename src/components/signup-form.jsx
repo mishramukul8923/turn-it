@@ -35,11 +35,39 @@ export function SignUpForm() {
     const isEmailValid = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     const isPasswordValid = (password) =>
       /^(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{5,}$/.test(password);
-
+    if (!firstname) {
+      toast({
+        title: "Invalid Field",
+        description: "First name cannot be empty.",
+        variant: "destructive",
+      });
+      setIsLoading(false);
+      return;
+    }
+    
+    if (!lastname) {
+      toast({
+        title: "Invalid Field",
+        description: "Last name cannot be empty.",
+        variant: "destructive",
+      });
+      setIsLoading(false);
+      return;
+    }
+    
     if (!isEmailValid(email)) {
       toast({
         title: "Invalid Email",
         description: "Please enter a valid email address.",
+        variant: "destructive",
+      });
+      setIsLoading(false);
+      return;
+    }
+    if (!password) {
+      toast({
+        title: "Invalid Field",
+        description: "Password cannot be empty.",
         variant: "destructive",
       });
       setIsLoading(false);
@@ -66,7 +94,7 @@ export function SignUpForm() {
       auth: false,
       subscription: [],
       social: false,
-      plan_id: 0,
+      plan_id: -1,
     };
 
     try {
@@ -91,8 +119,8 @@ export function SignUpForm() {
       localStorage.setItem("name", firstname + " " + lastname);
       localStorage.getItem("plan_id", 0);
       toast({
-        title: "Sign Up Successful",
-        description: result.message || "Welcome!",
+        title: "Sign Up Successful..",
+        description: "Please verify your Email" || "Welcome!",
       });
       setFirstname("");
       setLastname("");
@@ -101,7 +129,7 @@ export function SignUpForm() {
       setSuccess(!success);
 
       setTimeout(() => {
-        router.push("/");
+        router.push("/login");
       }, 1000);
     } catch (error) {
       console.error("Error:", error.message);
@@ -110,15 +138,15 @@ export function SignUpForm() {
     }
   };
 
-  const socialPostFunc = async () => {
-    await fetch("/api/users", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        /* Include required data */
-      }),
-    });
-  };
+  // const socialPostFunc = async () => {
+  //   await fetch("/api/users", {
+  //     method: "POST",
+  //     headers: { "Content-Type": "application/json" },
+  //     body: JSON.stringify({
+  //       /* Include required data */
+  //     }),
+  //   });
+  // };
 
   useEffect(() => {
     if (session?.user?.name) {
@@ -129,13 +157,114 @@ export function SignUpForm() {
     }
   }, [session]);
 
+  // const handleSocial = async (event) => {
+  //   event.preventDefault();
+  //   console.log("Handling social sign up");
+  //   await signIn("google", { redirect: false });
+  // };
+
+
   const handleSocial = async (event) => {
     event.preventDefault();
-    console.log("Handling social sign up");
-    await signIn("google", { redirect: false });
+    console.log("we are in handle social function");
+    await signIn('google');
   };
 
+  const socialPostFunc = async (email) => {
+    const body = {
+      social: true,
+      email: email
+    }
+    const res = await fetch('/api/users', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(body),
+    });
+
+    if (res.ok) {
+      const data = await res.json(); // Await the JSON response
+      // console.log("This is socialPost func", data);
+      localStorage.setItem("plan_id", data.plan_id);
+      localStorage.setItem("my_prompt", data.prompt || 0);
+      localStorage.setItem("email", data.email);
+      localStorage.setItem("image", data?.image);
+      localStorage.setItem('userId', data.id);
+      localStorage.setItem("name", data?.firstname + " " + data?.lastname);
+
+
+      localStorage.setItem('token', data.token);
+        document.cookie = `token=${data.token}; path=/; expires=Fri, 31 Dec 9999 23:59:59 GMT`;
+        router.push("/dashboard")
+
+    } else {
+      // console.error("Error in posting social data", , );
+      console.log("Error in posting social data", res.status, res.statusText)
+
+    }
+  };
+
+
+  useEffect(() => {
+    if(!session){
+      return
+    }
+    if (session?.user?.name) {
+      console.log("Session data:", session);
+      
+      socialPostFunc();
+      localStorage.setItem('userSession', JSON.stringify(session));
+
+
+      setTimeout(() => {
+        // router.push("/dashboard/account");
+      }, 1000);
+    } else {
+      localStorage.removeItem('userSession');
+    }
+  }, [session]);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   return (
+    <>
+  
+
     <Card className="mx-auto max-w-sm">
       <CardHeader>
         <CardTitle className="text-2xl">Sign Up</CardTitle>
@@ -208,5 +337,6 @@ export function SignUpForm() {
         </div>
       </CardContent>
     </Card>
+    </>
   );
 }

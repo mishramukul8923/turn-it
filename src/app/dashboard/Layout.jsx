@@ -49,6 +49,7 @@ export default function RootLayout({ children }) {
     </SidebarProvider>
    
     </ThemeProvider> 
+   
       </body>
     </html>
   );

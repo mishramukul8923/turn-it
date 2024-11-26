@@ -14,13 +14,15 @@ import { useRouter } from "next/navigation";
 export default function Home() {
   const router = useRouter()
   useEffect(() => {
-    if(localStorage.getItem('userId')){
+    if (localStorage.getItem('userId')) {
       setTimeout(() => {
-        router.push('/dashboard')
+        router.push('/dashboard/humanizer')
       }, 1000);
     }
-    else{
-      router.push('/login')
+    else {
+      setTimeout(() => {
+        router.push('/login')
+      }, 1000);
     }
   }, [])
   return (
