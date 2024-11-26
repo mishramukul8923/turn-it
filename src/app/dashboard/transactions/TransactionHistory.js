@@ -4,7 +4,18 @@ import styles from "./page.module.css";
 import { LuHistory } from "react-icons/lu";
 import { Skeleton } from "@/components/ui/skeleton"
 import { useRouter } from "next/navigation";
-
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 
 import {
@@ -17,19 +28,22 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import BackBtnSVG from "@/components/AllSvg/BackBtnSVG";
+import ApiKey from "@/components/ApiKey";
+import { toast } from "@/hooks/use-toast";
 
 const TransactionHistory = () => {
   const [allHistory, setAllHistory] = useState([]);
   const [loader, setLoader] = useState(true);
   const router = useRouter();
+  const my_plan = localStorage.getItem("plan_id");
 
 
   const fetchTransactionHistory = async () => {
     const userID = localStorage.getItem("userId");
-
+    fetchCloudKey(userID);
     // Check if userID is valid
     if (!userID) {
-      console.error("User ID is not found in local storage");
+      console.e("User ID is not found in local storage");
       setLoader(false);
       return; // Exit the function if userID is not available
     }
@@ -69,7 +83,7 @@ const TransactionHistory = () => {
     const plan_id = localStorage.getItem("plan_id");
     switch (plan_id) {
       case "-1":
-        return `Plan Expired`;
+        return `No Active Plan`;
       case "1":
         return `Basic (Monthly)`;
       case "2":
@@ -89,22 +103,22 @@ const TransactionHistory = () => {
 
   const fetchPlanType = (price) => {
     switch (price) {
-      case "19":
+      case "1":
         return `Basic Monthly`;
 
-      case "49":
+      case "2":
         return `Standard Monthly`;
 
-      case "99":
+      case "3":
         return `Enterprise Monthly`;
 
-      case "180":
+      case "4":
         return `Basic Yearly`;
 
-      case "468":
+      case "5":
         return `Standard Yearly`;
 
-      case "1068":
+      case "6":
         return `Premium Yearly`;
 
       default:
@@ -116,6 +130,79 @@ const TransactionHistory = () => {
     router.back();
   };
 
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [cloudKey, setCloudKey] = useState('')
+  const [dupKey, setDupKey] = useState('')
+
+  const fetchCloudKey = async (userId) => {
+    if(my_plan != "3" && my_plan != "6"){
+      return
+    }
+    if (cloudKey != "") {
+      return;
+    }
+    try {
+      const response = await fetch(`/api/apiKeys/${userId}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      if (response.ok) {
+        const data = await response.json();
+        setCloudKey(data?.data?.cloudKey)
+        setDupKey(data?.data?.cloudKey)
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Something went wrong.",
+        variant: "destructive",
+      });
+    }
+  }
+
+
+  const saveCloudKey = async () => {
+    const body = {
+      userId: localStorage.getItem("userId"),
+      cloudKey: cloudKey
+    }
+    try {
+      const saveResponse = await fetch('/api/apiKeys', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      });
+
+      const saveResult = await saveResponse.json();
+      if (saveResponse.ok) {
+        toast({
+          title: "Success",
+          description: "Cloud key updated successfully.",
+          variant: 'success',
+          style: {
+            backgroundColor: "black",
+          }
+        });
+        setDialogOpen(false);
+      } else {
+        toast({
+          title: "Error",
+          description: "Failed to save API keys.",
+          variant: "destructive",
+        });
+
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Something went wrong.",
+        variant: "destructive",
+      });
+    }
+  }
+
   return (
     <div className={styles.paymentHistory}>
       <div className={styles.turnitApiDetectorheadingsrch}>
@@ -125,6 +212,41 @@ const TransactionHistory = () => {
             Back
           </button>
         </div>
+        {(my_plan == "3" || my_plan == "6") && <div>
+          <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+            <DialogTrigger>
+              <button className={styles.turnitGenPastepadiback}>
+                Cloud Key
+              </button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Cloud Key</DialogTitle>
+                <DialogDescription>
+                  Enter Cloud Key Here.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="grid gap-4 py-4">
+                <div className="grid grid-cols-1 items-center gap-4">
+                  <Label htmlFor="apiKey" className="text-left">
+                    API Key
+                  </Label>
+                  <Input
+                    id="apiKey"
+                    value={cloudKey}
+                    placeholder="Enter Api Key"
+                    className="w-full"
+                    onChange={(e) => { setCloudKey(e.target.value) }}
+                  />
+                </div>
+              </div>
+              {dupKey != cloudKey && <DialogFooter>
+                <Button onClick={() => { saveCloudKey() }}>Save changes</Button>
+              </DialogFooter>}
+            </DialogContent>
+          </Dialog>
+
+        </div>}
 
       </div>
       <div className={`${styles.turnitGenPaste} ${styles.turnitGenPastepadi}`}>
@@ -161,7 +283,7 @@ const TransactionHistory = () => {
                 <TableHead>Plan Type</TableHead>
                 <TableHead>Created Date</TableHead>
                 <TableHead>Plan Start Date</TableHead>
-                <TableHead >Plan Expired Date</TableHead>
+                <TableHead >Plan End Date</TableHead>
                 <TableHead className="text-right">Amount</TableHead>
               </TableRow>
             </TableHeader>
@@ -171,7 +293,7 @@ const TransactionHistory = () => {
                   <TableCell className="font-medium">{idx + 1}</TableCell>
                   <TableCell>{data?.paymentId}</TableCell>
                   <TableCell className={styles.planType}>
-                    {fetchPlanType(data?.price)}
+                    {fetchPlanType(data?.plan_id)}
                   </TableCell>
                   <TableCell>{formatData(data?.created_at)}</TableCell>
                   <TableCell>{formatData(data?.started_at)}</TableCell>

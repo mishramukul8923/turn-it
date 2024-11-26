@@ -42,8 +42,10 @@ export function NavUser({ user }) {
   const { toast } = useToast();
 
   const logout = async () => {
+    
     document.cookie = "token=; path=/;"; // Clear the token cookie
     const email = user?.email; // Access the email from the user object
+    await signOut({ redirect: false }); // Prevent immediate redirection
 
     try {
       // Send logout request to the backend to save the logout time
@@ -62,6 +64,9 @@ export function NavUser({ user }) {
           title: 'Success',
           description: 'Logged out successfully!',
           variant: 'success',
+          style: {
+            backgroundColor: "black",
+          }
         });
 
         // Wait a moment before redirecting
@@ -75,7 +80,7 @@ export function NavUser({ user }) {
       toast({
         title: 'Error',
         description: 'Error logging out. Please try again.',
-        variant: 'error',
+         variant: "destructive",
       });
     }
   };
@@ -154,17 +159,17 @@ export function NavUser({ user }) {
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuGroup>
-                <DropdownMenuItem>
+                <DropdownMenuItem className="cursor-pointer" onClick={() => {router.push("/dashboard/pricing-plan")}}>
                   <Sparkles />
-                  <Link href="/dashboard/pricing-plan">Upgrade to Pro</Link>
+                  <p>Upgrade to Pro</p>
                 </DropdownMenuItem>
-                <DropdownMenuItem>
+                <DropdownMenuItem className="cursor-pointer" onClick={() => {router.push("/dashboard/account")}}>
                   <BadgeCheck />
-                  <Link href="/dashboard/dashaccount">Account</Link>
+                  <p>Account</p>
                 </DropdownMenuItem>
               </DropdownMenuGroup>
 
-              <DropdownMenuItem onClick={logout}>
+              <DropdownMenuItem onClick={logout} className="cursor-pointer">
                 <LogOut />
                 Log out
               </DropdownMenuItem>

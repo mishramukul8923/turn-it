@@ -11,6 +11,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
+
+
+
 export function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -36,7 +39,7 @@ export function LoginForm() {
       return;
     }
 
-    const postData = { email, password };
+    const postData = { email, password, social : false };
     setLoading(true);
 
     try {
@@ -49,11 +52,13 @@ export function LoginForm() {
       });
 
       const result = await response.json();
+      console.log("this is result data", result)
       if (!response.ok) {
         throw new Error(result.error || 'Failed to log in');
       }
 
       localStorage.setItem("plan_id", result.plan_id);
+      localStorage.setItem("my_prompt", result.prompt || 0);
       localStorage.setItem("email", postData.email);
       localStorage.setItem("image", result?.image);
       localStorage.setItem('userId', result.id);
@@ -65,17 +70,21 @@ export function LoginForm() {
       });
 
       setTimeout(() => {
-        router.push("/dashboard");
+        router.push("/dashboard/humanizer");
       }, 1000);
 
       if (result.token) {
         localStorage.setItem('token', result.token);
-        document.cookie = `token=${result.token}; path=/; expires=Fri, 31 Dec 9999 23:59:59 GMT`;
+        document.cookie = `token=${result.token}; path=/; `;
+        // setTimeout(() => {
+        //   router.push("/dashboard/humanizer");
+        // }, )
       } else {
-        console.error('Login successful, but no token received');
+        console.log('Login successful, but no token received');
+       
       }
     } catch (error) {
-      console.error('Error:', error.message);
+      // console.error('Error:', error.message);
       toast({
         title: "Error",
         description: error.message,
@@ -86,32 +95,66 @@ export function LoginForm() {
     }
   };
 
+
+
+
+
   const handleSocial = async (event) => {
     event.preventDefault();
+    
     console.log("we are in handle social function");
-    await signIn('google', { redirect: false });
+    await signIn('google');
   };
 
-  const socialPostFunc = async () => {
-    await fetch('/api/users', {
+  const socialPostFunc = async (email) => {
+    const body = {
+      social: true,
+      email: email
+    }
+    const res = await fetch('/api/users', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        // Include any required data for your POST request
-      }),
+      body: JSON.stringify(body),
     });
+
+    if (res.ok) {
+      const data = await res.json(); // Await the JSON response
+      console.log("This is socialPost func", data);
+      localStorage.setItem("plan_id", data.plan_id);
+      localStorage.setItem("my_prompt", data.prompt || 0);
+      localStorage.setItem("email", data.email);
+      localStorage.setItem("image", data?.image);
+      localStorage.setItem('userId', data.id);
+      localStorage.setItem("name", data?.firstname + " " + data?.lastname);
+
+
+      localStorage.setItem('token', data.token);
+        document.cookie = `token=${data.token}; path=/; expires=Fri, 31 Dec 9999 23:59:59 GMT`;
+        router.push("/dashboard")
+
+    } else {
+      // console.error("Error in posting social data", , );
+      console.log("Error in posting social data", res.status, res.statusText)
+
+    }
   };
 
+
   useEffect(() => {
+    if(!session){
+      return
+    }
     if (session?.user?.name) {
       console.log("Session data:", session);
+      
       socialPostFunc();
       localStorage.setItem('userSession', JSON.stringify(session));
 
+
       setTimeout(() => {
-        router.push("/dashboard/dashaccount");
+        // router.push("/dashboard/account");
       }, 1000);
     } else {
       localStorage.removeItem('userSession');
@@ -119,51 +162,56 @@ export function LoginForm() {
   }, [session]);
 
   return (
-    <Card className="mx-auto max-w-sm">
-      <CardHeader>
-        <CardTitle className="text-2xl">Login</CardTitle>
-        <CardDescription>Enter your email below to login to your account</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <form onSubmit={handleLogin} className="grid gap-4">
-          <div className="grid gap-2">
-            <Label htmlFor="email">Email</Label>
-            <Input
-              id="email"
-              type="email"
-              placeholder="m@example.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </div>
-          <div className="grid gap-2">
-            <div className="flex items-center">
-              <Label htmlFor="password">Password</Label>
-              <Link href="/forgotpassword" className="ml-auto inline-block text-sm underline">
-                Forgot your password?
-              </Link>
+
+    <>
+
+
+      <Card className="mx-auto max-w-sm">
+        <CardHeader>
+          <CardTitle className="text-2xl">Login</CardTitle>
+          <CardDescription>Enter your email below to login to your account</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleLogin} className="grid gap-4">
+            <div className="grid gap-2">
+              <Label htmlFor="email">Email</Label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="m@example.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
             </div>
-            <Input
-              id="password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
+            <div className="grid gap-2">
+              <div className="flex items-center">
+                <Label htmlFor="password">Password</Label>
+                <Link href="/forgotpassword" className="ml-auto inline-block text-sm underline">
+                  Forgot your password?
+                </Link>
+              </div>
+              <Input
+                id="password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </div>
+            <Button type="submit" className="w-full" disabled={loading}>
+              {loading ? "Logging in..." : "Login"}
+            </Button>
+            <Button type="button" variant="outline" className="w-full" onClick={handleSocial}>
+              Login with Google
+            </Button>
+          </form>
+          <div className="mt-4 text-center text-sm">
+            Don&apos;t have an account?{" "}
+            <Link href="/signup" className="underline">
+              Sign up
+            </Link>
           </div>
-          <Button type="submit" className="w-full" disabled={loading}>
-            {loading ? "Logging in..." : "Login"}
-          </Button>
-          <Button type="button" variant="outline" className="w-full" onClick={handleSocial}>
-            Login with Google
-          </Button>
-        </form>
-        <div className="mt-4 text-center text-sm">
-          Don&apos;t have an account?{" "}
-          <Link href="/signup" className="underline">
-            Sign up
-          </Link>
-        </div>
-      </CardContent>
-    </Card>
+        </CardContent>
+      </Card>
+    </>
   );
 }
